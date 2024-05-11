@@ -22,6 +22,7 @@
     Não tem uma conta? <a href="{% url 'register' %}">Crie uma!.</a>
 
     <script>
+        document.querySelector('#logo').addEventListener('click', () => location.replace('/'));
         if (!localStorage.getItem('theme')){
         localStorage.setItem('theme', 'light');} 
         document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))

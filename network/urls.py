@@ -16,7 +16,7 @@ urlpatterns = [
     path("/create", views.create, name="create"),
     path("feed/<str:view>", views.feed_view, name="feed_view"),
     path("follow/<str:user>", views.follow_view, name="follow_view"),
-    path("change_profile", views.change_profile, name="change_profile"),
+    path("change_pfp", views.change_pfp, name="change_pfp"),
     
     path("api/delete_post/<int:id>", views.api_delete_post, name="api_delete_post"),
     path("api/post/<int:id>", views.api_post, name="api_post_view"),

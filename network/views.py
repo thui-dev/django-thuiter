@@ -21,7 +21,7 @@ def follow_view(request, user):
 
         return HttpResponse(status=204)
 
-def change_profile(request):
+def change_pfp(request):
     pass
 
 def api_profile_view(request, who):
@@ -34,6 +34,7 @@ def api_profile_view(request, who):
     }
 
     if request.user.is_authenticated:
+        following = 'false'
         if who == request.user.username:
             following = 'self'
         elif User.objects.get(username=request.user.username).following.filter(username=who).all():
@@ -174,6 +175,15 @@ def register(request):
         if password != confirmation:
             return render(request, "network/register.html", {
                 "message": "Passwords must match."
+            })
+        
+        if username == '':
+            return render(request, "network/register.html", {
+                "message": "insira o nome de usuário"
+            })
+        if password == '':
+            return render(request, "network/register.html", {
+                "message": "insira uma senha"
             })
 
         # Attempt to create new user

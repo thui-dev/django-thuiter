@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.querySelector('#logo').addEventListener('click', () => location.replace('/'));
     //bottom navbar, if logged in
     try{
         document.querySelector('#create').addEventListener('click', () => create());
-        document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#following').addEventListener('click', () => load_feed('following', 'feed'));
         document.querySelector('#chat_button').addEventListener('click', ()=>messages_view())
         document.querySelector('#user-profile').addEventListener('click', () => {

@@ -27,6 +27,8 @@
 
     Já tem uma conta? <a href="{% url 'login' %}">Faça Login!</a>
     <script>
+        document.querySelector('#logo').addEventListener('click', () => location.replace('/'));
+
         if (!localStorage.getItem('theme')){
         localStorage.setItem('theme', 'light');} 
         document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))
