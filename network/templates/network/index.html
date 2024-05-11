@@ -69,7 +69,26 @@
         <div id="profile_feed"></div>
     </div>
 
-    <div id="post_view"></div>
+    <div id="post_view">
+
+        <div id="main_post"></div>
+
+        <form style="padding:10px;">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                <label for="floatingTextarea">Comentário</label>
+            </div>
+            <div style="height:8px;"></div>
+            <div style="display:flex; justify-content:right; margin:0px 20px;">
+                <button type="submit" class="btn btn-primary mb-3">comentar</button>
+            </div>        
+        </form>
+
+        <div style="padding:0px 10px;" id="post_comments">
+            simulação de comentario
+        </div>
+
+    </div>
 
     <div style="padding:10px; display:flex; justify-content:center">
         <!--<div class="spinner-border" role="status">

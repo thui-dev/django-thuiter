@@ -166,11 +166,11 @@ function post_view(post){
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#post_view').style.display="block";
 
-    document.querySelector(`#post_view`).innerHTML="";
+    document.querySelector(`#main_post`).innerHTML="";
     
-    document.querySelector(`#post_view`).append(post_obj(post))
+    document.querySelector(`#main_post`).append(post_obj(post))
 
-    document.querySelector(`#post_view`).append;
+    document.querySelector(`#main_post`).append;
 
     document.querySelector('#delete_post_button').addEventListener('click', ()=>{
         console.log(post.id);
