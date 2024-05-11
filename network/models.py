@@ -4,7 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     following = models.ManyToManyField("User", blank=True, null=True, related_name="followers")
-    pfp = models.ImageField(upload_to="pfps", null=True, blank=True)
+    pfp = models.ImageField(upload_to="pfps", default='pfps/Default_pfp.jpg')
 
 class Post(models.Model):
     image = models.ImageField(upload_to="posts", null=True, blank=True)
@@ -15,7 +15,14 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     
     def serialize(self):
-        return {
+        
+        try:
+            pfp_img_url = self.user.pfp.url
+        except:
+            pfp_img_url = ''
+        
+        return {    
+            "pfp_img_url": pfp_img_url,
             "id": self.id,
             "likes": self.likes.count(),
             "content":self.content,

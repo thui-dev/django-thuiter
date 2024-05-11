@@ -46,6 +46,7 @@
         
         <!-- Modal for pfp -->
         <form action="{% url 'change_pfp' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
           <div class="modal fade" id="change_pfp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -54,7 +55,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="file" id="image" name="arquivo">
+                    <input type="file" id="pfp_img_file" name="pfp_img_file">
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

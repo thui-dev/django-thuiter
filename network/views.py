@@ -22,7 +22,10 @@ def follow_view(request, user):
         return HttpResponse(status=204)
 
 def change_pfp(request):
-    pass
+    request.user.pfp = request.FILES.get('pfp_img_file')
+    request.user.save()
+    
+    return HttpResponseRedirect('/'+request.user.username)
 
 def api_profile_view(request, who):
     
@@ -30,7 +33,7 @@ def api_profile_view(request, who):
         'following': 'false',
         'following_count':User.objects.get(username=who).following.count(),
         'followers_count':User.objects.filter(following__username=who).all().count(),
-        'username':User.objects.get(username=who).username
+        'username':User.objects.get(username=who).username,
     }
 
     if request.user.is_authenticated:
@@ -40,6 +43,11 @@ def api_profile_view(request, who):
         elif User.objects.get(username=request.user.username).following.filter(username=who).all():
             following = 'true'
         data["following_button"]=following
+
+    if not User.objects.get(username=who).pfp.url == None:
+        data['pfp_img_url']=User.objects.get(username=who).pfp.url
+    else:
+        data['pfp_img_url']='https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
 
     return JsonResponse(data, safe=False)
 

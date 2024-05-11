@@ -92,15 +92,6 @@ function load_profile(who){
                 else{
                     return `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
                 }
-            
-            function user_pfp_if_any(){
-                return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
-                if (post.user_pfp  != ''){
-                    return post.user_pfp
-                }else{
-                    return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
-                }
-            }
 
             function change_pfp(){
                 if (data.following_button == 'self'){
@@ -115,7 +106,7 @@ function load_profile(who){
             <div class="row">
 
                 <div class="col-4" style="padding:20px 0px 0px 15px" ${change_pfp()}>
-                    <img src="${user_pfp_if_any()}" class="img-fluid" style="border-radius:100%">
+                    <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%;">
                 </div>
 
                 <div class="col-8" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
@@ -259,15 +250,6 @@ function post_obj(post){
         }
     }
 
-    function user_pfp_if_any(){
-        return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
-        if (post.user_pfp  != ''){
-            return post.user_pfp
-        }else{
-            return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
-        }
-    }
-
     function post_options(){
         if (post.yours == 'true'){
             return `
@@ -290,7 +272,7 @@ function post_obj(post){
                 <div id="username" class="row align-items-center" style="padding:3px 5px 7px 5px">
 
                 <div class="col-auto">
-                    <img src="${user_pfp_if_any()}" class="img-fluid" style="border-radius:100%; height:30px "></img>
+                    <img src="${post.pfp_img_url}" class="img-fluid" style="border-radius:100%; height:30px "></img>
                 </div>
                 
                 <div class="col-auto" style="padding:0px">
