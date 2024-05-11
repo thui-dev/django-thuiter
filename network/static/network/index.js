@@ -105,11 +105,14 @@ function load_profile(who){
             <div class="container text-left">
             <div class="row">
 
-                <div class="col-4" style="padding:20px 0px 0px 15px" ${change_pfp()}>
-                    <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%;">
+                <div class="col-5" style="padding:20px 0px 0px 0px" ${change_pfp()}>
+                    <div class="container">
+                        <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%;">
+                    </div>
                 </div>
+                
 
-                <div class="col-8" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
+                <div class="col-7" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
                     <div class="container">
                         <div class="row">
                             <h1>${data.username}</h1>
