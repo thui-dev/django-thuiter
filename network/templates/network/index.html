@@ -1,0 +1,124 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="feed_view">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <h3 id="recentes_header" style="margin:3px; padding:3px 0px 0px 0px;">Recentes</h3>
+                </div>
+
+                <div class="col">
+                    <h3 id="seguindo_header" style="margin:3px; padding:3px 0px 0px 0px">Seguindo</h3>
+                </div>
+            </div>
+        </div>
+        <div id="feed"></div>
+    </div>
+
+    <div id="messages_view" style="margin:10px">
+        <h1>Conversas</h1>
+    </div>
+    
+
+    <div id="create_form" style="margin:10px">
+        <h1>Criar thuíte</h1>
+        <form action="{% url 'create' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-floating" style="margin:20px 0px">
+                <textarea autofocus class="form-control" placeholder="Leave a comment here" name="content" style="height: 100px"></textarea>
+                <label for="content">escreva o que está pensando</label>
+            </div>
+            
+            <input type="file" id="image" name="arquivo">
+
+            <div style="display:flex; justify-content:right; margin:0px 20px;">
+                <button type="submit" class="btn btn-primary mb-3">thuitar</button>
+            </div>
+            
+        </form>
+    </div>
+
+    <div id="profile_view">
+        <div id="profile_header"></div>
+        
+        <!-- Modal for pfp -->
+        <form action="{% url 'change_profile' %}" method="post" enctype="multipart/form-data">
+          <div class="modal fade" id="change_pfp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Mudar foto de perfil</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" id="image" name="arquivo">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <hr>
+        <div id="profile_feed"></div>
+    </div>
+
+    <div id="post_view"></div>
+
+    <div style="padding:10px; display:flex; justify-content:center">
+        <!--<div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div>você chegou ao fim da tl!</div>-->
+    </div>
+
+    <!-- Modal for deleting post -->
+    <div class="modal fade" id="delete_post" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Deletar post?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Essa ação não poderá ser desfeita. O post será removido de todos os lugares.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" data-bs-dismiss="modal" id="delete_post_button" class="btn btn-danger">Deletar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for 3dots post -->
+    <div class="modal fade" id="post_options_owner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Opções do thuíte</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!--<button type="button" data-bs-dismiss="modal" class="btn btn-primary"><i class="bi bi-pencil"></i> Editar post</button>-->
+                <div style="height:10px;"></div>
+                <button type="button" data-bs-target="#delete_post" data-bs-toggle="modal" class="btn btn-danger"><i class="bi bi-trash"></i> Deletar post</button>            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height:70px"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">-->
+        <link href="{% static 'network/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'network/font/bootstrap-icons.min.css' %}" rel="stylesheet">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        {% block script %}
+        {% endblock %}
+    </head>
+    <body>
+        <nav class="navbar sticky-top navbar-expand bg-body-tertiary">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" id="logo">Thuitter</a> 
+
+                <ul class="navbar-nav">
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="user-profile" data-username="{{ user.username }}"><strong><i class="bi bi-person-circle"></i> {{ user.username }}</strong></a>
+                        </li>
+                    {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="mode-toggle"><i class="bi bi-moon"></i></a>
+                        </li>
+                </ul>
+            </div>
+        </nav>
+
+        <nav class="navbar fixed-bottom navbar-expand bg-body-tertiary">
+            <div class="container-fluid" style="font-size:200%; padding: 0px 20px">
+                {% if user.is_authenticated %}
+                <div style="margin:auto" class="nav-item">
+                    <a class="nav-link" id="following"><i class="bi bi-house-door"></i></a>
+                </div>
+                <div style="margin:auto" class="nav-item">
+                    <a id="create" class="nav-link" ><i class="bi bi-plus-square"></i></a>
+                </div>     
+                <div style="margin:auto" class="nav-item">
+                    <a class="nav-link" id="chat_button"><i class="bi bi-chat-left-dots"></i></a>
+                </div>                
+                {% endif %}
+            </div>
+        </nav>
+        
+        <div class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
+
+        <script src="{% static 'network/bootstrap.bundle.min.js' %}"></script>
+    </body>
+</html>

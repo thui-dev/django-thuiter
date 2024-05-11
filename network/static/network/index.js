@@ -1,0 +1,345 @@
+//sets default light theme 
+if (!localStorage.getItem('theme')){
+    localStorage.setItem('theme', 'light');} 
+document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    //by default, load feed all
+    load_feed('all', 'feed');
+
+    
+    //theme toggle button
+    let mode_toggle = document.querySelector('#mode-toggle');
+    if (localStorage.getItem('theme') == 'light'){
+        mode_toggle.innerHTML = '<i class="bi bi-moon"></i>';
+    }else{
+        mode_toggle.innerHTML = '<i class="bi bi-sun"></i>';
+    }
+    mode_toggle.addEventListener('click', () => {
+        if (localStorage.getItem('theme') == "light"){
+            mode_toggle.innerHTML = '<i class="bi bi-sun"></i>';
+            document.querySelector('html').setAttribute('data-bs-theme','dark');
+            localStorage.setItem('theme', 'dark');
+        }else{
+            mode_toggle.innerHTML = '<i class="bi bi-moon"></i>';
+            document.querySelector('html').setAttribute('data-bs-theme','light');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    //bottom navbar, if logged in
+    try{
+        document.querySelector('#create').addEventListener('click', () => create());
+        document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
+        document.querySelector('#following').addEventListener('click', () => load_feed('following', 'feed'));
+        document.querySelector('#chat_button').addEventListener('click', ()=>messages_view())
+        document.querySelector('#user-profile').addEventListener('click', () => {
+            load_profile(document.querySelector('#user-profile').dataset.username)
+        });
+        logged=true;
+    }catch{
+        logged = false;
+    }
+
+    //feed view navbar(all/following)
+    document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
+    document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
+    
+});
+
+function messages_view(){
+    document.querySelector('#create_form').style.display="none";
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#profile_view').style.display="none";
+    document.querySelector('#post_view').style.display="none";
+    document.querySelector('#messages_view').style.display="block";
+
+
+
+}
+
+function load_profile(who){
+    //hide everything else
+    document.querySelector('#create_form').style.display="none";
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#profile_view').style.display="block";
+    document.querySelector('#post_view').style.display="none";
+    document.querySelector('#messages_view').style.display="none";
+
+
+    const profile_header = document.querySelector('#profile_header');
+    function header(){
+
+        fetch(`/profile/${who}`)
+        .then(response => response.json())
+        .then(data => {
+
+            function follow_state(){
+                if (data.following == 'self'){
+                    return `<a type="button" href="/logout" class="btn btn-secondary">Log Out</a>`}
+                else if (data.following == 'true'){
+                    return `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
+                else{
+                    return `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
+                }
+            
+            function user_pfp_if_any(){
+                return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+                if (post.user_pfp  != ''){
+                    return post.user_pfp
+                }else{
+                    return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+                }
+            }
+
+            function change_pfp(){
+                if (data.following == 'self'){
+                    return 'data-bs-toggle="modal" data-bs-target="#change_pfp"'
+                }else{
+                    return ''
+                }
+            }
+
+            profile_header.innerHTML = `
+            <div class="container text-center">
+            <div class="row">
+
+                <div class="col-4" style="padding:20px 0px 0px 10px" ${change_pfp()}>
+                    <img src="${user_pfp_if_any()}" class="img-fluid" style="border-radius:100%">
+                </div>
+
+                <div class="col-8" style="display:flex; align-items: center; justify-content:left; padding:0px 20px;">
+                    <div>    
+                        <h1>${data.username}</h1>
+                        <div id="follow_div">${follow_state()}<div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            `;
+
+            follow_button = document.querySelector('#follow_div')
+            follow_button.addEventListener('click', ()=>{
+                fetch(`follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
+                if (data.following == 'false'){
+                    data.following = 'true';
+                    follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
+                else{
+                    data.following = 'false';
+                    follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
+            })
+        });
+        
+    };
+
+    header();
+    load_feed(who, 'profile_feed');
+}
+
+function create(){
+
+    //hide
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#profile_view').style.display="none";
+    document.querySelector('#create_form').style.display="block";
+    document.querySelector('#post_view').style.display="none";
+    document.querySelector('#messages_view').style.display="none";
+
+
+    /*
+    document.querySelector('#create_form').onsubmit = (event) => {
+
+        load_feed('all', 'feed');
+        setTimeout(()=>{load_feed('all', 'feed')}, 1000);
+        return false;
+    }*/
+}
+
+function post_view(post){
+
+    //hide
+    document.querySelector('#messages_view').style.display="none";
+    document.querySelector('#create_form').style.display="none";
+    document.querySelector('#profile_view').style.display="none";
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#post_view').style.display="block";
+
+    document.querySelector(`#post_view`).innerHTML="";
+    
+    document.querySelector(`#post_view`).append(post_obj(post))
+
+    document.querySelector(`#post_view`).append;
+
+    document.querySelector('#delete_post_button').addEventListener('click', ()=>{
+        console.log(post.id);
+        fetch(`delete_post/${post.id}`)
+        .then(()=>{load_feed('all', 'feed')});
+        
+    });
+
+}
+
+function post_obj(post){
+    
+    function image_if_any(){
+        if (post.image  != ''){
+            return `<img src="${post.image}" class="img-fluid" style="border-radius:5px"></img>`
+        }else{
+            return ''
+        }
+    }
+
+    function user_pfp_if_any(){
+        return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+        if (post.user_pfp  != ''){
+            return post.user_pfp
+        }else{
+            return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+        }
+    }
+
+    function post_options(){
+        if (post.yours == 'true'){
+            return `
+            <div class="col-2" data-bs-toggle="modal" data-bs-target="#post_options_owner" style="text-align:right; padding: 0px 20px">
+                <i class="bi bi-three-dots"></i>
+            </div>
+            `
+        }else{
+            return ''
+        }
+    }
+
+    const element = document.createElement('div');
+    element.innerHTML = `
+    <div style="border-color: gray; border-width:1px; border-radius:5px; border-style: solid; margin:10px; padding:5px;">
+        
+        <div class="row align-items-center">
+
+            <div class="col-10">
+                <div id="username" class="row align-items-center" style="padding:3px 5px 7px 5px">
+
+                <div class="col-auto">
+                    <img src="${user_pfp_if_any()}" class="img-fluid" style="border-radius:100%; height:30px "></img>
+                </div>
+                
+                <div class="col-auto" style="padding:0px">
+                    <b>${post.user}</b>
+                </div>
+
+                </div>
+            </div>
+            
+            ${post_options()}
+
+        </div>
+        
+        
+        ${image_if_any()}
+        <div style="height:5px"></div>
+        <div>${post.content}</div>
+        
+        <div style="display:flex; justify-content:right">
+            <div id="like" style="padding:5px;"></div>
+        </div>
+    </div>
+    `;
+    //specific post view on click
+    element.addEventListener('click', (e) => {
+        e.stopPropagation()
+        post_view(post);
+    })
+    //profile-view on click
+    element.querySelector('#username').addEventListener('click', (e) => {
+        e.stopPropagation()
+        load_profile(post.user);
+    })
+    //like button
+    let like_div = element.querySelector('#like')
+    like_div.addEventListener('click', (e) => {e.stopPropagation();like(post, like_div)});
+    if(post.liked == "true"){
+        like_div.innerHTML = `<i style="color:red" class="bi bi-heart-fill"></i> &#8287;&#8287;${post.likes}`;
+    }else{
+        like_div.innerHTML = `<i class="bi bi-heart"></i> &#8287;&#8287;${post.likes}`;
+    }
+    return element;
+}
+
+function load_feed(type, where){
+
+    start=0;
+    end=7;
+
+    //hide everything else if not profile
+    if (where != 'profile_feed'){
+
+        //hide
+        document.querySelector('#messages_view').style.display="none";
+        document.querySelector('#create_form').style.display="none";
+        document.querySelector('#profile_view').style.display="none";
+        document.querySelector('#feed_view').style.display="block";
+        document.querySelector('#post_view').style.display="none";
+
+    }
+
+    //reset feed
+    document.querySelector('#feed').innerHTML=" ";
+    document.querySelector('#profile_feed').innerHTML=" ";
+
+    //main feed header selector
+    if (type == 'all'){
+        document.querySelector("#recentes_header").style.textDecoration = "underline";
+        document.querySelector("#seguindo_header").style.textDecoration = "none";
+
+    }else{
+        document.querySelector("#recentes_header").style.textDecoration = "none";
+        document.querySelector("#seguindo_header").style.textDecoration = "underline";
+    }
+
+    function hydrate_posts(start, end, where){
+        fetch(`/feed/${type}?start=${start}&end=${end}`)
+        .then(response => response.json())
+        .then(posts => {
+            posts.forEach(post => {
+                document.querySelector(`#${where}`).append(post_obj(post));
+            });
+        })
+    }
+    //infinite scroll
+    window.onscroll = ()=>{
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight){
+            start=end;
+            end += 7;
+            hydrate_posts(start, end, where);
+        }
+    }  
+    hydrate_posts(start, end, where);
+}
+
+function like(post, element){
+
+    if(logged){
+        if(post.liked == "false"){
+            post.liked = "true";
+            post.likes ++;
+            element.innerHTML = `<i style="color:red" class="bi bi-heart-fill"></i> &#8287;&#8287;${post.likes}`;
+        }else{
+            post.liked = "false";
+            post.likes --;
+            element.innerHTML = `<i class="bi bi-heart"></i> &#8287;&#8287;${post.likes}`;
+        }
+
+        fetch(`post/${post.id}`, {
+            method: 'PUT',
+            headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
+            mode: 'same-origin',
+            body: JSON.stringify({
+                liked: post.liked,
+            })
+        })
+    }else{
+        alert("é necessário o login!")
+    }
+}
