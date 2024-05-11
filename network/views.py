@@ -41,6 +41,7 @@ def api_profile_view(request, who):
         }
 
     data['following_count']=User.objects.get(username=who).following.count()
+    data['followers_count']=User.objects.filter(following__username=who).all().count()
 
     return JsonResponse(data, safe=False)
 

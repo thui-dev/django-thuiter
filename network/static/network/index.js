@@ -144,7 +144,7 @@ function load_profile(who){
 
                                 <div class="row justify-content-center">
                                     <div class="col-12">
-                                        todo
+                                        ${data.followers_count}
                                     </div>
                                 </div>
 
