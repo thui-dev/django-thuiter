@@ -4,12 +4,22 @@ if (!localStorage.getItem('theme')){
 document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    //by default, load feed all
-    load_feed('all', 'feed');
+    //ajeitando pathname to be passed in as variable
+    let pathname = window.location.pathname.split('/')
+    console.log(pathname)
 
-    
+    //load user profile, post or feed_all
+    if (pathname[1] == 'post'){
+        post_view(pathname[2]);
+    }else if (pathname[1] == ''){
+        load_feed('all', 'feed');
+    }else{
+        load_profile(pathname[1]);
+    }
+
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
     if (localStorage.getItem('theme') == 'light'){
@@ -55,9 +65,6 @@ function messages_view(){
     document.querySelector('#profile_view').style.display="none";
     document.querySelector('#post_view').style.display="none";
     document.querySelector('#messages_view').style.display="block";
-
-
-
 }
 
 function load_profile(who){
@@ -68,11 +75,12 @@ function load_profile(who){
     document.querySelector('#post_view').style.display="none";
     document.querySelector('#messages_view').style.display="none";
 
+    history.pushState({section: who}, '', who)
 
     const profile_header = document.querySelector('#profile_header');
     function header(){
 
-        fetch(`/profile/${who}`)
+        fetch(`/api/profile/${who}`)
         .then(response => response.json())
         .then(data => {
 
@@ -167,14 +175,22 @@ function post_view(post){
     document.querySelector('#post_view').style.display="block";
 
     document.querySelector(`#main_post`).innerHTML="";
+
+    //accessd by link or click (-1 fetch request if click)?
+    if (typeof(post) == 'string'){
+        fetch(`/api/post/${post}`)
+        .then(reponse => reponse.json())
+        .then(post => {
+            document.querySelector(`#main_post`).append(post_obj(post));
+        })
+    }else{
+        history.pushState({section: ''}, '', '/post/'+post.id);
+        document.querySelector(`#main_post`).append(post_obj(post));
+    }
     
-    document.querySelector(`#main_post`).append(post_obj(post))
-
-    document.querySelector(`#main_post`).append;
-
     document.querySelector('#delete_post_button').addEventListener('click', ()=>{
         console.log(post.id);
-        fetch(`delete_post/${post.id}`)
+        fetch(`/api/delete_post/${post.id}`)
         .then(()=>{load_feed('all', 'feed')});
         
     });
@@ -282,6 +298,8 @@ function load_feed(type, where){
         document.querySelector('#feed_view').style.display="block";
         document.querySelector('#post_view').style.display="none";
 
+        history.pushState({section: ''}, '', '/');
+
     }
 
     //reset feed
@@ -331,7 +349,7 @@ function like(post, element){
             element.innerHTML = `<i class="bi bi-heart"></i> &#8287;&#8287;${post.likes}`;
         }
 
-        fetch(`post/${post.id}`, {
+        fetch(`api/post/${post.id}`, {
             method: 'PUT',
             headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
             mode: 'same-origin',

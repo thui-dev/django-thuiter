@@ -7,8 +7,9 @@ from django.urls import reverse
 
 from .models import *
 
-def index(request):
+def index(request, username="", post='', post_id=''):
     return render(request, "network/index.html")
+
 
 def follow_view(request, user):
     if request.method == "GET":
@@ -23,13 +24,12 @@ def follow_view(request, user):
 def change_profile(request):
     pass
 
-def profile_view(request, who):
+def api_profile_view(request, who):
     if who == request.user.username:
         data = {
             "username":request.user.username,
             "following":"self",
         }
-        return JsonResponse(data, safe=False)
     else:
         following = 'false'
         if User.objects.get(username=request.user.username).following.filter(username=who).all():
@@ -39,12 +39,12 @@ def profile_view(request, who):
             "username":User.objects.get(username=who).username,
             "following":following,
         }
-        return JsonResponse(data, safe=False)
+
+    return JsonResponse(data, safe=False)
 
 
-def post(request, id):
+def api_post(request, id):
     if request.method == 'PUT':
-        
         try:
             post = Post.objects.get(id=id)
         except:
@@ -62,6 +62,23 @@ def post(request, id):
             post.likes.remove(request.user)
             post.save()
             return HttpResponse(status=204)
+    
+    #specific post view
+    post = Post.objects.get(id=id).serialize()
+    #append user liked if logged in
+    if request.user.is_authenticated:
+        if Post.objects.filter(id=id, likes=request.user).all(): 
+            post["liked"] = "true"
+    #append image url
+    try:
+        sexo = Post.objects.get(id=post["id"]).image.url
+    except:
+        sexo = ''
+    if post["user"] == request.user.username:
+        post["yours"] = 'true'
+    post["image"] = sexo
+
+    return JsonResponse(post, safe=False, status=201)
 
 def feed_view(request, view):
     
@@ -87,8 +104,6 @@ def feed_view(request, view):
         for post in posts:
             if Post.objects.filter(id=post["id"], likes=request.user).all():
                 post["liked"] = "true"
-            final.append(post)
-        posts = final
 
     #append images and yours
     final = []
@@ -102,8 +117,6 @@ def feed_view(request, view):
             post["yours"] = 'true'
 
         post["image"] = sexo
-        final.append(post)
-    posts = final
 
     return JsonResponse(posts[start:end], safe=False, status=201)
 
@@ -140,7 +153,7 @@ def login_view(request):
     else:
         return render(request, "network/login.html")
 
-def delete_post(request, id):
+def api_delete_post(request, id):
     post = Post.objects.get(id=id)
     post.delete()
     return HttpResponse(status=204)
