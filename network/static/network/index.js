@@ -85,9 +85,9 @@ function load_profile(who){
         .then(data => {
 
             function follow_state(){
-                if (data.following == 'self'){
+                if (data.following_button == 'self'){
                     return `<a type="button" href="/logout" class="btn btn-secondary">Log Out</a>`}
-                else if (data.following == 'true'){
+                else if (data.following_button == 'true'){
                     return `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
                 else{
                     return `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
@@ -103,7 +103,7 @@ function load_profile(who){
             }
 
             function change_pfp(){
-                if (data.following == 'self'){
+                if (data.following_button == 'self'){
                     return 'data-bs-toggle="modal" data-bs-target="#change_pfp"'
                 }else{
                     return ''
@@ -111,17 +111,57 @@ function load_profile(who){
             }
 
             profile_header.innerHTML = `
-            <div class="container text-center">
+            <div class="container text-left">
             <div class="row">
 
-                <div class="col-4" style="padding:20px 0px 0px 10px" ${change_pfp()}>
+                <div class="col-4" style="padding:20px 0px 0px 15px" ${change_pfp()}>
                     <img src="${user_pfp_if_any()}" class="img-fluid" style="border-radius:100%">
                 </div>
 
-                <div class="col-8" style="display:flex; align-items: center; justify-content:left; padding:0px 20px;">
-                    <div>    
-                        <h1>${data.username}</h1>
-                        <div id="follow_div">${follow_state()}<div>
+                <div class="col-8" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
+                    <div class="container">
+                        <div class="row">
+                            <h1>${data.username}</h1>
+                        </div>  
+
+                        <div class="row" style="text-align:center">
+                            <div class="col-6">
+
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        ${data.following_count}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                       seguindo
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        todo
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                       seguidores
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="height:10px"></div>
+                        
+                        <div class="row">
+                            <div class="col-auto" id="follow_div">${follow_state()}<div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -130,12 +170,12 @@ function load_profile(who){
 
             follow_button = document.querySelector('#follow_div')
             follow_button.addEventListener('click', ()=>{
-                fetch(`follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
-                if (data.following == 'false'){
-                    data.following = 'true';
+                fetch(`/follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
+                if (data.following_button == 'false'){
+                    data.following_button = 'true';
                     follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
                 else{
-                    data.following = 'false';
+                    data.following_button = 'false';
                     follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
             })
         });
@@ -349,7 +389,7 @@ function like(post, element){
             element.innerHTML = `<i class="bi bi-heart"></i> &#8287;&#8287;${post.likes}`;
         }
 
-        fetch(`api/post/${post.id}`, {
+        fetch(`/api/post/${post.id}`, {
             method: 'PUT',
             headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
             mode: 'same-origin',

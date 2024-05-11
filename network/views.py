@@ -28,7 +28,7 @@ def api_profile_view(request, who):
     if who == request.user.username:
         data = {
             "username":request.user.username,
-            "following":"self",
+            "following_button":"self",
         }
     else:
         following = 'false'
@@ -37,8 +37,10 @@ def api_profile_view(request, who):
             
         data = {
             "username":User.objects.get(username=who).username,
-            "following":following,
+            "following_button":following,
         }
+
+    data['following_count']=User.objects.get(username=who).following.count()
 
     return JsonResponse(data, safe=False)
 
