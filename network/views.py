@@ -25,23 +25,20 @@ def change_profile(request):
     pass
 
 def api_profile_view(request, who):
-    if who == request.user.username:
-        data = {
-            "username":request.user.username,
-            "following_button":"self",
-        }
-    else:
-        following = 'false'
-        if User.objects.get(username=request.user.username).following.filter(username=who).all():
-            following = 'true'
-            
-        data = {
-            "username":User.objects.get(username=who).username,
-            "following_button":following,
-        }
+    
+    data={
+        'following': 'false',
+        'following_count':User.objects.get(username=who).following.count(),
+        'followers_count':User.objects.filter(following__username=who).all().count(),
+        'username':User.objects.get(username=who).username
+    }
 
-    data['following_count']=User.objects.get(username=who).following.count()
-    data['followers_count']=User.objects.filter(following__username=who).all().count()
+    if request.user.is_authenticated:
+        if who == request.user.username:
+            following = 'self'
+        elif User.objects.get(username=request.user.username).following.filter(username=who).all():
+            following = 'true'
+        data["following_button"]=following
 
     return JsonResponse(data, safe=False)
 
