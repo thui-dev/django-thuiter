@@ -143,7 +143,7 @@ function load_profile(who){
                             <div class="col-6">
 
                                 <div class="row justify-content-center">
-                                    <div class="col-12">
+                                    <div class="col-12" id="followers_count">
                                         ${data.followers_count}
                                     </div>
                                 </div>
@@ -170,13 +170,19 @@ function load_profile(who){
 
             follow_button = document.querySelector('#follow_div')
             follow_button.addEventListener('click', ()=>{
+                let followers_count_element = document.querySelector("#followers_count");
+                let followers = parseInt(followers_count_element.innerHTML);
                 fetch(`/follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
                 if (data.following_button == 'false'){
                     data.following_button = 'true';
-                    follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
+                    follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`;
+                    followers_count_element.innerHTML = followers+1;
+                }
                 else{
                     data.following_button = 'false';
-                    follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
+                    follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`;
+                    followers_count_element.innerHTML = followers-1;
+                }
             })
         });
         
