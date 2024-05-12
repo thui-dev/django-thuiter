@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //ajeitando pathname to be passed in as variable
     let pathname = window.location.pathname.split('/')
-    console.log(pathname)
 
     //load user profile, post or feed_all
     if (pathname[1] == 'post'){
@@ -39,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.querySelector('#logo').addEventListener('click', () => location.replace('/'));
     //bottom navbar, if logged in
     try{
         document.querySelector('#create').addEventListener('click', () => create());
+        document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#following').addEventListener('click', () => load_feed('following', 'feed'));
         document.querySelector('#chat_button').addEventListener('click', ()=>messages_view())
         document.querySelector('#user-profile').addEventListener('click', () => {
@@ -212,13 +211,12 @@ function create(){
     document.querySelector('#messages_view').style.display="none";
 
 
-    /*
     document.querySelector('#create_form').onsubmit = (event) => {
-
-        load_feed('all', 'feed');
-        setTimeout(()=>{load_feed('all', 'feed')}, 1000);
-        return false;
-    }*/
+        if (document.querySelector("#content").value == ''){
+            alert('post vazio');
+            return false;
+        }
+    }
 }
 
 function post_view(post){
@@ -245,10 +243,8 @@ function post_view(post){
     }
     
     document.querySelector('#delete_post_button').addEventListener('click', ()=>{
-        console.log(post.id);
         fetch(`/api/delete_post/${post.id}`)
         .then(()=>{load_feed('all', 'feed')});
-        
     });
 
 }
