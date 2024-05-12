@@ -141,7 +141,6 @@ def create(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-
 def login_view(request):
     if request.method == "POST":
 

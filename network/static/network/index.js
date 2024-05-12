@@ -1,14 +1,14 @@
 //sets default light theme 
 if (!localStorage.getItem('theme')){
-    localStorage.setItem('theme', 'light');} 
-document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))
+    localStorage.setItem('theme', 'light');
+} 
+document.querySelector('html').setAttribute('data-bs-theme', localStorage.getItem('theme'));
 
 document.addEventListener('DOMContentLoaded', () => {
-
     //ajeitando pathname to be passed in as variable
     let pathname = window.location.pathname.split('/')
 
-    //load user profile, post or feed_all
+    /*load user profile, post or feed_all
     if (pathname[1] == 'post'){
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         load_feed('all', 'feed');
     }else{
         load_profile(pathname[1]);
-    }
+    }*/
+    load_feed('all', 'feed');
 
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#chat_view').addEventListener('click', () => chat_view());
         document.querySelector('#create').addEventListener('click', () => create());
         document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
-        document.querySelector('#following').addEventListener('click', () => load_feed('following', 'feed'));
+        document.querySelector('#following').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#chat_button').addEventListener('click', ()=>messages_view())
         document.querySelector('#user-profile').addEventListener('click', () => {
             load_profile(document.querySelector('#user-profile').dataset.username)
@@ -55,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //feed view navbar(all/following)
     document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
     document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
-    
 });
 
 function chat_view(){
@@ -219,7 +219,8 @@ function load_profile(who){
 }
 
 function create(){
-
+    
+    history.pushState({section: ''}, '', '/');
     //hide
     document.querySelector('#chat_view').style.display="none";
     document.querySelector('#feed_view').style.display="none";
@@ -229,12 +230,12 @@ function create(){
     document.querySelector('#messages_view').style.display="none";
 
 
-    document.querySelector('#create_form').onsubmit = (event) => {
+    /*document.querySelector('#create_form').onsubmit = (event) => {
         if (document.querySelector("#content").value == ''){
             alert('post vazio');
             return false;
         }
-    }
+    }*/
 }
 
 function post_view(post){
