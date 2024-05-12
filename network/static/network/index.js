@@ -3,8 +3,6 @@ if (!localStorage.getItem('theme')){
     localStorage.setItem('theme', 'light');} 
 document.querySelector('html').setAttribute('data-bs-theme',localStorage.getItem('theme'))
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
 
     //ajeitando pathname to be passed in as variable
@@ -14,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pathname[1] == 'post'){
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
+        //chat_view();
         load_feed('all', 'feed');
     }else{
         load_profile(pathname[1]);
@@ -40,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //bottom navbar, if logged in
     try{
+        document.querySelector('#chat_view').addEventListener('click', () => chat_view());
         document.querySelector('#create').addEventListener('click', () => create());
         document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#following').addEventListener('click', () => load_feed('following', 'feed'));
@@ -58,16 +58,33 @@ document.addEventListener('DOMContentLoaded', () => {
     
 });
 
-function messages_view(){
+function chat_view(){
+    document.querySelector('#chat_view').style.display="block";
     document.querySelector('#create_form').style.display="none";
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#profile_view').style.display="none";
     document.querySelector('#post_view').style.display="none";
-    document.querySelector('#messages_view').style.display="block";
+    document.querySelector('#messages_view').style.display="none";
+
 }
+
+function messages_view(){
+    document.querySelector('#create_form').style.display="none";
+    document.querySelector('#chat_view').style.display="none";
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#profile_view').style.display="none";
+    document.querySelector('#post_view').style.display="none";
+    document.querySelector('#messages_view').style.display="block";
+
+    document.querySelector('#open_messages').addEventListener('click', (event)=>{
+            console.log(event.target);
+            chat_view(event.target);
+        })
+    }
 
 function load_profile(who){
     //hide everything else
+    document.querySelector('#chat_view').style.display="none";
     document.querySelector('#create_form').style.display="none";
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#profile_view').style.display="block";
@@ -204,6 +221,7 @@ function load_profile(who){
 function create(){
 
     //hide
+    document.querySelector('#chat_view').style.display="none";
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#profile_view').style.display="none";
     document.querySelector('#create_form').style.display="block";
@@ -227,6 +245,8 @@ function post_view(post){
     document.querySelector('#profile_view').style.display="none";
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#post_view').style.display="block";
+    document.querySelector('#chat_view').style.display="none";
+
 
     document.querySelector(`#main_post`).innerHTML="";
 
@@ -340,6 +360,8 @@ function load_feed(type, where){
         document.querySelector('#profile_view').style.display="none";
         document.querySelector('#feed_view').style.display="block";
         document.querySelector('#post_view').style.display="none";
+        document.querySelector('#chat_view').style.display="none";
+
 
         history.pushState({section: ''}, '', '/');
 
