@@ -57,23 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
 });
 
-function chat_view(){
-    document.querySelector('#chat_view').style.display="block";
-    document.querySelector('#create_form').style.display="none";
-    document.querySelector('#feed_view').style.display="none";
-    document.querySelector('#profile_view').style.display="none";
-    document.querySelector('#post_view').style.display="none";
-    document.querySelector('#messages_view').style.display="none";
-
+function chat_view(){    
+    hide_all_but_this_view('chat_view');
 }
 
 function messages_view(){
-    document.querySelector('#create_form').style.display="none";
-    document.querySelector('#chat_view').style.display="none";
-    document.querySelector('#feed_view').style.display="none";
-    document.querySelector('#profile_view').style.display="none";
-    document.querySelector('#post_view').style.display="none";
-    document.querySelector('#messages_view').style.display="block";
+    hide_all_but_this_view('messages_view');
 
     document.querySelector('#open_messages').addEventListener('click', (event)=>{
             console.log(event.target);
@@ -82,13 +71,7 @@ function messages_view(){
     }
 
 function load_profile(who){
-    //hide everything else
-    document.querySelector('#chat_view').style.display="none";
-    document.querySelector('#create_form').style.display="none";
-    document.querySelector('#feed_view').style.display="none";
-    document.querySelector('#profile_view').style.display="block";
-    document.querySelector('#post_view').style.display="none";
-    document.querySelector('#messages_view').style.display="none";
+    hide_all_but_this_view('profile_view');
 
     history.pushState({section: who}, '', `/${who}`)
 
@@ -220,14 +203,7 @@ function load_profile(who){
 function create(){
     
     history.pushState({section: ''}, '', '/');
-    //hide
-    document.querySelector('#chat_view').style.display="none";
-    document.querySelector('#feed_view').style.display="none";
-    document.querySelector('#profile_view').style.display="none";
-    document.querySelector('#create_form').style.display="block";
-    document.querySelector('#post_view').style.display="none";
-    document.querySelector('#messages_view').style.display="none";
-
+    hide_all_but_this_view('create_form');
 
     /*document.querySelector('#create_form').onsubmit = (event) => {
         if (document.querySelector("#content").value == ''){
@@ -239,14 +215,7 @@ function create(){
 
 function post_view(post){
 
-    //hide
-    document.querySelector('#messages_view').style.display="none";
-    document.querySelector('#create_form').style.display="none";
-    document.querySelector('#profile_view').style.display="none";
-    document.querySelector('#feed_view').style.display="none";
-    document.querySelector('#post_view').style.display="block";
-    document.querySelector('#chat_view').style.display="none";
-
+    hide_all_but_this_view('post_view');
 
     document.querySelector(`#main_post`).innerHTML="";
 
@@ -346,25 +315,24 @@ function post_obj(post){
     return element;
 }
 
-function load_feed(type, where){
+function hide_all_but_this_view(view){
+    document.querySelector('#messages_view').style.display="none";
+    document.querySelector('#create_form').style.display="none";
+    document.querySelector('#profile_view').style.display="none";
+    document.querySelector('#feed_view').style.display="none";
+    document.querySelector('#post_view').style.display="none";
+    document.querySelector('#chat_view').style.display="none";
 
+    document.querySelector(`#${view}`).style.display="block";
+}
+
+function load_feed(type, where){
     start=0;
     end=7;
 
-    //hide everything else if not profile
     if (where != 'profile_feed'){
-
-        //hide
-        document.querySelector('#messages_view').style.display="none";
-        document.querySelector('#create_form').style.display="none";
-        document.querySelector('#profile_view').style.display="none";
-        document.querySelector('#feed_view').style.display="block";
-        document.querySelector('#post_view').style.display="none";
-        document.querySelector('#chat_view').style.display="none";
-
-
+        hide_all_but_this_view('feed_view')
         history.pushState({section: ''}, '', '/');
-
     }
 
     //reset feed
