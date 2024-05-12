@@ -47,15 +47,19 @@
         <!-- Modal for pfp -->
         <form action="{% url 'change_pfp' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-          <div class="modal fade" id="change_pfp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="edit_profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Mudar foto de perfil</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Editar perfil</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <h3>Trocar Foto de Perfil:</h3>
                     <input type="file" id="pfp_img_file" name="pfp_img_file">
+                    <!--<hr>
+                    <h3>Nome de usuário:</h3>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"> -->
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -22,6 +22,9 @@ def follow_view(request, user):
         return HttpResponse(status=204)
 
 def change_pfp(request):
+    if not request.FILES.get('pfp_img_file'):
+        return HttpResponse('error, img empty', status=402)
+
     request.user.pfp = request.FILES.get('pfp_img_file')
     request.user.save()
     
@@ -172,6 +175,7 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+        pfp = request.FILES.get("pfp_img_file")
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -193,11 +197,14 @@ def register(request):
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
+            if request.FILES.get('pfp_img_file'):
+                user.pfp = request.FILES.get('pfp_img_file')
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
             })
+        
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:

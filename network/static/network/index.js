@@ -75,7 +75,7 @@ function load_profile(who){
     document.querySelector('#post_view').style.display="none";
     document.querySelector('#messages_view').style.display="none";
 
-    history.pushState({section: who}, '', who)
+    history.pushState({section: who}, '', `/${who}`)
 
     const profile_header = document.querySelector('#profile_header');
     function header(){
@@ -84,20 +84,30 @@ function load_profile(who){
         .then(response => response.json())
         .then(data => {
 
-            function follow_state(){
+            function buttons(){{
                 if (data.following_button == 'self'){
-                    return `<a type="button" href="/logout" class="btn btn-secondary">Log Out</a>`}
-                else if (data.following_button == 'true'){
-                    return `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`}
-                else{
-                    return `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`}
-                }
-
-            function change_pfp(){
-                if (data.following_button == 'self'){
-                    return 'data-bs-toggle="modal" data-bs-target="#change_pfp"'
+                    return `
+                    <div class="col-auto" style="padding:0px">
+                        <a type="button" href="/logout" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile">Editar</a>
+                    </div>
+                    <div class="col-auto">
+                        <a type="button" href="/logout" class="btn btn-secondary">Sair</a>
+                    </div>
+                    `
                 }else{
-                    return ''
+                    if (data.following_button == 'true'){
+                        return `
+                        <div id="follow_div" class="col-auto">
+                            <button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>
+                        </div>
+                        `}
+                    else{
+                        
+                        return `
+                        <div id="follow_div" class="col-auto">
+                            <button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>
+                        </div>`}
+                    }
                 }
             }
 
@@ -105,9 +115,9 @@ function load_profile(who){
             <div class="container text-left">
             <div class="row">
 
-                <div class="col-5" style="padding:20px 0px 0px 0px" ${change_pfp()}>
+                <div class="col-5" style="padding:20px 0px 0px 0px">
                     <div class="container">
-                        <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%;">
+                        <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover;">
                     </div>
                 </div>
                 
@@ -153,7 +163,7 @@ function load_profile(who){
                         <div class="row" style="height:10px"></div>
                         
                         <div class="row">
-                            <div class="col-auto" id="follow_div">${follow_state()}<div>
+                            ${buttons()}
                         </div>
                         
                     </div>
@@ -171,7 +181,7 @@ function load_profile(who){
                 
                     if (data.following_button == 'false'){
                         data.following_button = 'true';
-                        follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo`;
+                        follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>`;
                         followers_count_element.innerHTML = followers+1;
                     }
                     else{
@@ -275,7 +285,7 @@ function post_obj(post){
                 <div id="username" class="row align-items-center" style="padding:3px 5px 7px 5px">
 
                 <div class="col-auto">
-                    <img src="${post.pfp_img_url}" class="img-fluid" style="border-radius:100%; height:30px "></img>
+                    <img src="${post.pfp_img_url}" class="img-fluid" style="border-radius:100%; height:30px; aspect-ratio: 1 / 1; object-fit: cover;"></img>
                 </div>
                 
                 <div class="col-auto" style="padding:0px">
