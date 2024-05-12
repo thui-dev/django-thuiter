@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //ajeitando pathname to be passed in as variable
     let pathname = window.location.pathname.split('/')
 
-    /*load user profile, post or feed_all
+    //load user profile, post or feed_all
     if (pathname[1] == 'post'){
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         load_feed('all', 'feed');
     }else{
         load_profile(pathname[1]);
-    }*/
-    load_feed('all', 'feed');
+    }
 
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
@@ -382,23 +381,33 @@ function load_feed(type, where){
         document.querySelector("#seguindo_header").style.textDecoration = "underline";
     }
 
-    function hydrate_posts(start, end, where){
-        fetch(`/feed/${type}?start=${start}&end=${end}`)
-        .then(response => response.json())
-        .then(posts => {
-            posts.forEach(post => {
-                document.querySelector(`#${where}`).append(post_obj(post));
-            });
-        })
+    hydrate_toggle = 'true'
+    if (hydrate_toggle == 'true'){
+        function hydrate_posts(start, end, where){
+            fetch(`/feed/${type}?start=${start}&end=${end}`)
+            .then(response => response.json())
+            .then(posts => {
+                if (posts[0] == 'null'){
+                    hydrate_toggle = 'false';
+                    throw new Error('fim da tl!');
+                }
+                posts.forEach(post => {
+                    document.querySelector(`#${where}`).append(post_obj(post));
+                });
+            })
+        }
     }
+
     //infinite scroll
     window.onscroll = ()=>{
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight){
             start=end;
             end += 7;
-            hydrate_posts(start, end, where);
+            if (hydrate_toggle == 'true'){
+            hydrate_posts(start, end, where)}
         }
-    }  
+    }
+
     hydrate_posts(start, end, where);
 }
 

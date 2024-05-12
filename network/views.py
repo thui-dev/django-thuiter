@@ -125,6 +125,13 @@ def feed_view(request, view):
             post["yours"] = 'true'
 
         post["image"] = sexo
+    
+    try:
+        gotdata = posts[start]
+    except IndexError:
+        posts = ['null']
+        start = 0
+        end = 1
 
     return JsonResponse(posts[start:end], safe=False, status=201)
 
