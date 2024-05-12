@@ -120,7 +120,7 @@
 
     <div id="create_form" style="margin:10px">
         <h1>Criar thuíte</h1>
-        <form action="{% url 'create' %}" method="POST" enctype="multipart/form-data">
+        <form action='{% url "create" %}' method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="form-floating" style="margin:20px 0px">
