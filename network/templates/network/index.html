@@ -86,7 +86,6 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
         
@@ -137,6 +136,26 @@
         </form>
     </div>
 
+    <div id="post_view" style="display: none">
+
+        <div id="main_post"></div>
+
+        <form action="{% url 'create' %}" method="post" id="comment_form" style="padding:10px;">
+            {% csrf_token %}
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" name="content" id="content"></textarea>
+                <label for="floatingTextarea">Comentário</label>
+            </div>
+            <div style="height:8px;"></div>
+            <div style="display:flex; justify-content:right; margin:0px 20px;">
+                <button type="submit" class="btn btn-primary mb-3">comentar</button>
+            </div>        
+        </form>
+
+        <div id="post_comments"></div>
+
+    </div>
+
     <div id="profile_view" style="display: none">
         <div id="profile_header"></div>
         
@@ -168,27 +187,6 @@
 
         <hr>
         <div id="profile_feed"></div>
-    </div>
-
-    <div id="post_view" style="display: none">
-
-        <div id="main_post"></div>
-
-        <form style="padding:10px;">
-            <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                <label for="floatingTextarea">Comentário</label>
-            </div>
-            <div style="height:8px;"></div>
-            <div style="display:flex; justify-content:right; margin:0px 20px;">
-                <button type="submit" class="btn btn-primary mb-3">comentar</button>
-            </div>        
-        </form>
-
-        <div style="padding:0px 10px;" id="post_comments">
-            simulação de comentario
-        </div>
-
     </div>
 
     <div style="padding:10px; display:flex; justify-content:center">

@@ -214,28 +214,61 @@ function create(){
 }
 
 function post_view(post){
-
     hide_all_but_this_view('post_view');
 
     document.querySelector(`#main_post`).innerHTML="";
+    document.querySelector(`#post_comments`).innerHTML='';
+
 
     //accessd by link or click (-1 fetch request if click)?
-    if (typeof(post) == 'string'){
+    if (typeof(post) == 'string'){//ou seja, uma URL
         fetch(`/api/post/${post}`)
         .then(reponse => reponse.json())
         .then(post => {
             document.querySelector(`#main_post`).append(post_obj(post));
-        })
+        });
     }else{
         history.pushState({section: ''}, '', '/post/'+post.id);
         document.querySelector(`#main_post`).append(post_obj(post));
+
     }
+
+    start=0
+    end=7
+    hydrate_toggle = 'true'
+    if (hydrate_toggle == 'true'){
+        function hydrate_posts(){
+            fetch(`/feed/post_comments?post_id=${window.location.pathname.split('/')[2]}&start=${start}&end=${end}`)
+            .then(response => response.json())
+            .then(posts => {
+                if (posts[0] == 'null'){
+                    hydrate_toggle = 'false';
+                    console.log('fim da tl!, hydrate posts disabilitado');
+                }
+                posts.forEach(sex => {
+                    if (sex != 'null'){
+                        document.querySelector(`#post_comments`).append(post_obj(sex));
+                    }
+                });
+            })
+        }
+    }
+    //infinite scroll
+    window.onscroll = ()=>{
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight){
+            start=end;
+            end += 7;
+            if (hydrate_toggle == 'true'){
+            hydrate_posts()}
+        }
+    }
+
+    hydrate_posts();
     
     document.querySelector('#delete_post_button').addEventListener('click', ()=>{
         fetch(`/api/delete_post/${post.id}`)
         .then(()=>{load_feed('all', 'feed')});
     });
-
 }
 
 function post_obj(post){
@@ -349,18 +382,29 @@ function load_feed(type, where){
         document.querySelector("#seguindo_header").style.textDecoration = "underline";
     }
 
+    function feed_type(){
+        if (where=="feed"){
+            return `/feed/${type}?start=${start}&end=${end}`
+        }else if(where=='profile_feed'){
+            return `/feed/profile?username=${type}&start=${start}&end=${end}`
+        }else if(where=="post_comments"){
+            return `/feed/post_comments?post_id=${type}&start=${start}&end=${end}`
+        }
+    }
+
     hydrate_toggle = 'true'
     if (hydrate_toggle == 'true'){
-        function hydrate_posts(start, end, where){
-            fetch(`/feed/${type}?start=${start}&end=${end}`)
+        function hydrate_posts(){
+            fetch(feed_type())
             .then(response => response.json())
             .then(posts => {
                 if (posts[0] == 'null'){
                     hydrate_toggle = 'false';
-                    throw new Error('fim da tl!');
+                    console.log('fim da tl!, hydrate posts disabilitado');
                 }
                 posts.forEach(post => {
-                    document.querySelector(`#${where}`).append(post_obj(post));
+                    if (post != 'null'){
+                    document.querySelector(`#${where}`).append(post_obj(post))}
                 });
             })
         }
@@ -372,11 +416,11 @@ function load_feed(type, where){
             start=end;
             end += 7;
             if (hydrate_toggle == 'true'){
-            hydrate_posts(start, end, where)}
+            hydrate_posts()}
         }
     }
 
-    hydrate_posts(start, end, where);
+    hydrate_posts();
 }
 
 function like(post, element){

@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -95,10 +95,12 @@ def feed_view(request, view):
     elif view == 'following':
         f = User.objects.get(id = request.user.id).following.all()
         g = Post.objects.filter(user__in = f).all()
-
         posts = g.order_by("-id").all()
-    else:
-        posts = Post.objects.order_by("-id").filter(user__username = view).all()
+    elif view=="profile":
+        posts = Post.objects.order_by("-id").filter(user__username = request.GET.get('username')).all()
+    else: #view=="comments":
+        posts = Post.objects.order_by("-id").filter(comment__id = request.GET.get('post_id')).all()
+
 
     start = int(request.GET.get("start") or 0)
     end = int(request.GET.get("end") or start+6)
@@ -145,6 +147,7 @@ def create(request):
         image=request.FILES.get("arquivo"),
     )
     post.save()
+    
     return HttpResponseRedirect(reverse("index"))
 
 
