@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pathname[1] == 'post'){
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
-        //chat_view();
         load_feed('all', 'feed');
     }else{
         load_profile(pathname[1]);
     }
+    //messages_view();
+    //load_feed('all', 'feed');
 
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
@@ -93,18 +94,24 @@ function load_profile(who){
                     </div>
                     `
                 }else{
+                    let element = '';
                     if (data.following_button == 'true'){
-                        return `
-                        <div id="follow_div" class="col-auto">
+                        element = `
+                        <div id="follow_div" class="col-auto"  style="padding:0px">
                             <button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>
                         </div>
                         `}
                     else{
-                        
-                        return `
-                        <div id="follow_div" class="col-auto">
+                        element = `
+                        <div id="follow_div" class="col-auto"  style="padding:0px">
                             <button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>
-                        </div>`}
+                        </div>
+                        `}
+                    
+                    return`${element}
+                    <div id="follow_div" class="col-auto">
+                        <button id="messages_button" type="button" class="btn btn-primary">messages</button>
+                    </div>`;
                     }
                 }
             }
@@ -205,12 +212,12 @@ function create(){
     history.pushState({section: ''}, '', '/');
     hide_all_but_this_view('create_form');
 
-    /*document.querySelector('#create_form').onsubmit = (event) => {
+    document.querySelector('#create_form').onsubmit = (event) => {
         if (document.querySelector("#content").value == ''){
             alert('post vazio');
             return false;
         }
-    }*/
+    }
 }
 
 function post_view(post){
@@ -231,6 +238,17 @@ function post_view(post){
         history.pushState({section: ''}, '', '/post/'+post.id);
         document.querySelector(`#main_post`).append(post_obj(post));
         document.querySelector(`#post_id_for_comment`).value=`/post/${window.location.pathname.split('/')[2]}`;
+    }
+
+    document.querySelector('#comment_form').onsubmit = () => {
+        if(document.querySelector("#comment_content").value == ''){
+            alert('post vazio');
+            return false;
+        }
+        if(!logged){
+            alert('necessário o login para comentar!');
+            return false;
+        }
     }
 
     start=0
@@ -326,15 +344,18 @@ function post_obj(post){
     `;
 
     //post options view
-    element.querySelector('#post_options').addEventListener('click', (e) => {
-        e.stopPropagation()
-        //delete button
-        document.querySelector('#delete_post_button').addEventListener('click', ()=>{
-            fetch(`/api/delete_post/${post.id}`)
-            .then(()=>{load_feed('all', 'feed')});    
-            document.querySelector('#delete_post_button').outerHTML = document.querySelector('#delete_post_button').outerHTML;
-        });
-    })
+    if (post.yours == 'true'){
+        element.querySelector('#post_options').addEventListener('click', () => {
+            e.stopPropagation()
+            //delete button
+            document.querySelector('#delete_post_button').addEventListener('click', ()=>{
+                fetch(`/api/delete_post/${post.id}`)
+                .then(()=>{load_feed('all', 'feed')});    
+                document.querySelector('#delete_post_button').outerHTML = document.querySelector('#delete_post_button').outerHTML;
+            });
+        })
+    }
+    
     //specific post view on click
     element.addEventListener('click', (e) => {
         e.stopPropagation()
