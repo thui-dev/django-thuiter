@@ -75,7 +75,9 @@ function messages_view(chat){
     fetch(`messages/${chat.username}`)
     .then(response => response.json())
     .then(chats => {
-        chats.forEach(chat => {})
+        chats.forEach(chat => {
+            
+        });
     });
 
 }
