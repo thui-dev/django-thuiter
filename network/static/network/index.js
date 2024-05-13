@@ -41,10 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //bottom navbar, if logged in
+    document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
     try{
-        document.querySelector('#chat_view').addEventListener('click', () => chat_view());
+        //document.querySelector('#chat_view').addEventListener('click', () => chat_view());
         document.querySelector('#create').addEventListener('click', () => create());
-        document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#following').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#chat_button').addEventListener('click', ()=>chats_view())
         document.querySelector('#user-profile').addEventListener('click', () => {
@@ -63,12 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function messages_view(){
-    hide_all_but_this_view('chat_view');
+    hide_all_but_this_view('messages_view');
     //history.pushState({section: ''}, '', 'messages');
 }
 
 function chats_view(){
-    hide_all_but_this_view('messages_view');
+    hide_all_but_this_view('chats_view');
     //history.pushState({section: ''}, '', 'chats');
 
     //load chats
@@ -402,7 +402,7 @@ function hide_all_but_this_view(view){
     document.querySelector('#profile_view').style.display="none";
     document.querySelector('#feed_view').style.display="none";
     document.querySelector('#post_view').style.display="none";
-    document.querySelector('#chat_view').style.display="none";
+    document.querySelector('#chats_view').style.display="none";
 
     document.querySelector(`#${view}`).style.display="block";
 }
