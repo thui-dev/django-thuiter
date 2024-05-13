@@ -105,35 +105,39 @@ def feed_view(request, view):
     start = int(request.GET.get("start") or 0)
     end = int(request.GET.get("end") or start+6)
 
-    #serialize to change data
-    posts = [post.serialize() for post in posts]
-
-    #append user liked if logged in
-    if request.user.is_authenticated:
-        final = []
-        for post in posts:
-            if Post.objects.filter(id=post["id"], likes=request.user).all():
-                post["liked"] = "true"
-
-    #append images and yours
-    final = []
-    for post in posts:
-        try:
-            sexo = Post.objects.get(id=post["id"]).image.url
-        except:
-            sexo = ''
-
-        if post["user"] == request.user.username:
-            post["yours"] = 'true'
-
-        post["image"] = sexo
-    
+    #return "null" if the query has no posts
     try:
         gotdata = posts[start]
     except IndexError:
         posts = ['null']
         start = 0
         end = 1
+        return JsonResponse(posts[start:end], safe=False, status=201)
+
+    #serialize to change data
+    posts = [post.serialize() for post in posts]
+
+    #append user liked if logged in
+    if request.user.is_authenticated:
+        for post in posts:
+            if Post.objects.filter(id=post["id"], likes=request.user).all():
+                post["liked"] = "true"
+
+    #append others
+    for post in posts:
+        #comments_count
+        post["comments_count"] = Post.objects.filter(comment__id=post["id"]).all().count()
+
+        #images
+        try:
+            sexo = Post.objects.get(id=post["id"]).image.url
+        except:
+            sexo = ''
+        post["image"] = sexo
+
+        #if the post is yours(so the owner can delete)
+        if post["user"] == request.user.username:
+            post["yours"] = 'true'
 
     return JsonResponse(posts[start:end], safe=False, status=201)
 

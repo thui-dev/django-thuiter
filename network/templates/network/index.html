@@ -142,6 +142,7 @@
 
         <form action="{% url 'create' %}" method="post" id="comment_form" style="padding:10px;">
             {% csrf_token %}
+            <input type="hidden" id="post_id" name="post_id" value="{{ request.path }}">
             <div class="form-floating">
                 <textarea class="form-control" placeholder="Leave a comment here" name="content" id="content"></textarea>
                 <label for="floatingTextarea">Comentário</label>
