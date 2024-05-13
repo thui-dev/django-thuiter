@@ -75,9 +75,7 @@
 
                 <div class="row fixed-bottom" style="bottom:64px; margin:0px 0px 10px 0px">
                     <div class="col-10" style="padding:0px 0px 0px 10px">
-                        <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px; width:100%; height:40px">
-                            &nbsp;a mensagem vai apearecer aqui yoo
-                        </div>
+                        <textarea class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px; width:100%; "></textarea>
                     </div>
                     <div class="col-2">
                         <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px">
@@ -121,6 +119,7 @@
         <h1>Criar thuíte</h1>
         <form action='{% url "create" %}' method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="hidden" name="post_id" value="null">
 
             <div class="form-floating" style="margin:20px 0px">
                 <textarea autofocus class="form-control" placeholder="Leave a comment here" name="content" id="content" style="height: 100px"></textarea>
@@ -142,7 +141,7 @@
 
         <form action="{% url 'create' %}" method="post" id="comment_form" style="padding:10px;">
             {% csrf_token %}
-            <input type="hidden" id="post_id" name="post_id" value="{{ request.path }}">
+            <input type="hidden" id="post_id_for_comment" name="post_id" value="{{ request.path }}">
             <div class="form-floating">
                 <textarea class="form-control" placeholder="Leave a comment here" name="content" id="content"></textarea>
                 <label for="floatingTextarea">Comentário</label>

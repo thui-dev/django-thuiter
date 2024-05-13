@@ -85,7 +85,10 @@ def api_post(request, id):
     if post["user"] == request.user.username:
         post["yours"] = 'true'
     post["image"] = sexo
-
+    
+    #append comments_count
+    post["comments_count"] = Post.objects.filter(comment__id=post["id"]).all().count()
+    
     return JsonResponse(post, safe=False, status=201)
 
 def feed_view(request, view):
@@ -145,13 +148,22 @@ def create(request):
     if request.method != 'POST':
         return HttpResponse('error, method not supported')
 
-    post = Post( 
+    if not request.POST['post_id'] == 'null':
+        post = Post(
+            content=request.POST['content'],
+            user=request.user,
+            image=request.FILES.get("arquivo"),
+            comment=Post.objects.get(id=request.POST['post_id'].split('/')[2]),
+        )
+        post.save()
+        return HttpResponseRedirect('/post/'+request.POST['post_id'].split('/')[2])
+    
+    post = Post(
         content=request.POST['content'],
         user=request.user,
         image=request.FILES.get("arquivo"),
     )
     post.save()
-    
     return HttpResponseRedirect(reverse("index"))
 
 

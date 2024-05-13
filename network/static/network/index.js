@@ -230,7 +230,7 @@ function post_view(post){
     }else{
         history.pushState({section: ''}, '', '/post/'+post.id);
         document.querySelector(`#main_post`).append(post_obj(post));
-
+        document.querySelector(`#post_id_for_comment`).value=`/post/${window.location.pathname.split('/')[2]}`;
     }
 
     start=0
@@ -265,10 +265,6 @@ function post_view(post){
 
     hydrate_posts();
     
-    document.querySelector('#delete_post_button').addEventListener('click', ()=>{
-        fetch(`/api/delete_post/${post.id}`)
-        .then(()=>{load_feed('all', 'feed')});
-    });
 }
 
 function post_obj(post){
@@ -284,7 +280,7 @@ function post_obj(post){
     function post_options(){
         if (post.yours == 'true'){
             return `
-            <div class="col-2" data-bs-toggle="modal" data-bs-target="#post_options_owner" style="text-align:right; padding: 0px 20px">
+            <div id="post_options" class="col-2" data-bs-toggle="modal" data-bs-target="#post_options_owner" style="text-align:right; padding: 0px 20px">
                 <i class="bi bi-three-dots"></i>
             </div>
             `
@@ -328,6 +324,17 @@ function post_obj(post){
         </div>
     </div>
     `;
+    //post options view
+    element.querySelector('#post_options').addEventListener('click', (e) => {
+        e.stopPropagation()
+        console.log(post.id)
+
+        f = document.querySelector('#delete_post_button').addEventListener('click', ()=>{
+            fetch(`/api/delete_post/${post.id}`)
+            .then(()=>{load_feed('all', 'feed')});
+        });
+
+    })
     //specific post view on click
     element.addEventListener('click', (e) => {
         e.stopPropagation()
