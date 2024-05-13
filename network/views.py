@@ -30,7 +30,7 @@ def change_pfp(request):
     
     return HttpResponseRedirect('/'+request.user.username)
 
-def user_chats(request, username):
+def user_chats(request):
     users = User.objects.get(id=request.user.id).chat.all()
     data=[]
     for user in users:

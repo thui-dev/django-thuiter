@@ -18,18 +18,22 @@
     </div>
 
     <div id="messages_view" style="display: none">
+        
         <div class="container text-left">
-            <div class="row open_messages" style="background: rgba(255, 255, 255, 0.151);;padding:10px 0px 10px 0px">
+            <div class="row open_messages" style="background: rgba(255, 255, 255, 0.151);;padding:10px 0px 0px 0px">
                 <div class="col-auto" style="padding:2px 0px 0px 6px">
                     <h1><i class="bi bi-chevron-left"></i></h1>
                 </div>
-                <div class="col-auto">
-                    <img src="https://i.pinimg.com/236x/cc/b2/c1/ccb2c19471c07c199db2b3de7ec5803a.jpg" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
+                <div class="col-auto" id="message_header_pfp">
+                    
                 </div>
                 <div class="col-auto" style="padding:0px;">
-                    <b style="font-size:160%">thui</b>
+                    <b style="font-size:160%" id="message_header_username"></b>
                 </div>
             </div>
+
+            <div id="messages_view_body"></div>
+            <!--
 
             <div style="height:8px"></div>
 
@@ -73,19 +77,24 @@
                     </div>
                 </div>
 
-                <div class="row fixed-bottom" style="bottom:64px; margin:0px 0px 10px 0px">
-                    <div class="col-10" style="padding:0px 0px 0px 10px">
-                        <textarea class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px; width:100%; "></textarea>
-                    </div>
-                    <div class="col-2">
-                        <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px">
-                            &nbsp;<i class="bi bi-send-fill"></i>&nbsp;
-                        </div>
-                    </div>
-                </div>
+                
 
             </div>
+             -->
+
+            <div class="row fixed-bottom" style="bottom:64px; margin:0px 0px 10px 0px">
+                <div class="col-10" style="padding:0px 0px 0px 10px">
+                    <textarea class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px; width:100%; height:45px"></textarea>
+                </div>
+                <div class="col-2">
+                    <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:500px">
+                        &nbsp;<i class="bi bi-send-fill"></i>&nbsp;
+                    </div>
+                </div>
+            </div>
+
         </div>
+       
         
     </div>
 
@@ -94,29 +103,6 @@
         <hr>
 
         <div id="chats"></div>
-
-        <!--
-        <div class="row" id="open_messages">
-            <div class="col-auto">
-                <img src="https://i.pinimg.com/236x/cc/b2/c1/ccb2c19471c07c199db2b3de7ec5803a.jpg" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:65px">
-            </div>
-            <div class="col-auto" style="padding:0px;">
-                <b style="font-size:160%">thui</b>
-                <div style="color:gray">ultima msg • há 11 min </div>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-auto">
-                <img src="https://wallpapers-clan.com/wp-content/uploads/2022/09/kirby-pfp-2.jpg" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:65px">
-            </div>
-            <div class="col-auto" style="padding:0px;">
-                <b style="font-size:160%">kyrby</b>
-                <div style="color:gray">ultima msg • há 53 min </div>
-            </div>
-        </div>
-        -->
-        
     </div>
     
 

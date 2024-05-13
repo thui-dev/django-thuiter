@@ -55,16 +55,24 @@ document.addEventListener('DOMContentLoaded', () => {
         logged = false;
     }
 
-    current_user_username = document.querySelector('#current_user_username').innerHTML;
+    //current_user_username = document.querySelector('#current_user_username').innerHTML;
 
     //feed view navbar(all/following)
     document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
     document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
 });
 
-function messages_view(){
+function messages_view(chat){
     hide_all_but_this_view('messages_view');
+    
     //history.pushState({section: ''}, '', 'messages');
+    
+    document.querySelector('#messages_view_body').innerHTML='';
+    
+    document.querySelector('#message_header_pfp').innerHTML=`<img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">`;
+    document.querySelector('#message_header_username').innerHTML=chat.username;
+
+    
 }
 
 function chats_view(){
@@ -74,7 +82,7 @@ function chats_view(){
     document.querySelector('#chats').innerHTML=''
 
     //load chats
-    fetch(`chats/${current_user_username}`)
+    fetch(`chats/`)
     .then(response => response.json())
     .then(chats => {
         chats.forEach(chat => {
@@ -93,8 +101,7 @@ function chats_view(){
         <hr>`;
 
         chat_element.addEventListener('click', (event)=>{
-            console.log(event.target);
-            messages_view(event.target);
+            messages_view(chat);
         })
 
         document.querySelector('#chats').append(chat_element);
