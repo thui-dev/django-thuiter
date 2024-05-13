@@ -3,13 +3,20 @@ from django.db import models
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField("User", blank=True, null=True, related_name="followers")
+    following = models.ManyToManyField("User", blank=True)
     pfp = models.ImageField(upload_to="pfps", default='pfps/Default_pfp.jpg')
+    chat = models.ManyToManyField("User", blank=True, related_name="chats")
+
+class Messages(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="senders")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="receivers")
+    content = models.CharField(max_length=256)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Post(models.Model):
     image = models.ImageField(upload_to="posts", null=True, blank=True)
-    comment = models.ForeignKey("Post", on_delete=models.CASCADE, null=True, related_name="comments")
-    likes = models.ManyToManyField("User", related_name="likes", blank=True, null=True)
+    comment = models.ForeignKey("Post", on_delete=models.CASCADE, null=True)
+    likes = models.ManyToManyField("User", related_name="likes", blank=True)
     content = models.CharField(max_length=256)
     user = models.ForeignKey(User, related_name='user_posts', on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
