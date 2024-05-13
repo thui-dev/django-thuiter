@@ -91,13 +91,13 @@ def api_post(request, id):
 def feed_view(request, view):
     
     if view == 'all':
-        posts = Post.objects.order_by("-id").all()
+        posts = Post.objects.filter(comment=None).order_by("-id").all()
     elif view == 'following':
         f = User.objects.get(id = request.user.id).following.all()
         g = Post.objects.filter(user__in = f).all()
-        posts = g.order_by("-id").all()
+        posts = g.filter(comment=None).order_by("-id").all()
     elif view=="profile":
-        posts = Post.objects.order_by("-id").filter(user__username = request.GET.get('username')).all()
+        posts = Post.objects.order_by("-id").filter(comment=None, user__username = request.GET.get('username')).all()
     else: #view=="comments":
         posts = Post.objects.order_by("-id").filter(comment__id = request.GET.get('post_id')).all()
 
