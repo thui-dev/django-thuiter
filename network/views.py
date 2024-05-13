@@ -30,6 +30,13 @@ def change_pfp(request):
     
     return HttpResponseRedirect('/'+request.user.username)
 
+def user_chats(request, username):
+
+    data=[{
+
+    }]
+    return JsonResponse(data,status=201, safe=False)
+
 def api_profile_view(request, who):
     
     data={
@@ -143,6 +150,10 @@ def feed_view(request, view):
             post["yours"] = 'true'
 
     return JsonResponse(posts[start:end], safe=False, status=201)
+
+def add_chat(request, username):
+    User.objects.get(id=request.user.id).chat.add(User.objects.get(username=username))
+    return HttpResponseRedirect(reverse('index'), status=201)
 
 def create(request):
     if request.method != 'POST':

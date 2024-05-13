@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
         load_feed('all', 'feed');
-    }else{
+    }/*else if(pathname[1] == 'chats'){
+        chats_view();
+    }*/else{
         load_profile(pathname[1]);
     }
     //messages_view();
@@ -44,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#create').addEventListener('click', () => create());
         document.querySelector('#logo').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#following').addEventListener('click', () => load_feed('all', 'feed'));
-        document.querySelector('#chat_button').addEventListener('click', ()=>messages_view())
+        document.querySelector('#chat_button').addEventListener('click', ()=>chats_view())
         document.querySelector('#user-profile').addEventListener('click', () => {
             load_profile(document.querySelector('#user-profile').dataset.username)
         });
@@ -53,21 +55,34 @@ document.addEventListener('DOMContentLoaded', () => {
         logged = false;
     }
 
+    current_user_username = document.querySelector('#current_user_username').innerHTML;
+
     //feed view navbar(all/following)
     document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
     document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
 });
 
-function chat_view(){    
+function messages_view(){
     hide_all_but_this_view('chat_view');
+    //history.pushState({section: ''}, '', 'messages');
 }
 
-function messages_view(){
+function chats_view(){
     hide_all_but_this_view('messages_view');
+    //history.pushState({section: ''}, '', 'chats');
+
+    //load chats
+    fetch(`chats/${current_user_username}`)
+    .then(response => response.json())
+    .then(chats => {
+        chats.forEach(chat => {
+            //todo
+        })
+    });
 
     document.querySelector('#open_messages').addEventListener('click', (event)=>{
             console.log(event.target);
-            chat_view(event.target);
+            messages_view(event.target);
         })
     }
 
@@ -110,7 +125,7 @@ function load_profile(who){
                     
                     return`${element}
                     <div id="follow_div" class="col-auto">
-                        <button id="messages_button" type="button" class="btn btn-primary">messages</button>
+                        <button id="messages_button" type="button" class="btn btn-primary">mensagens</button>
                     </div>`;
                     }
                 }
@@ -176,7 +191,12 @@ function load_profile(who){
             </div>
             </div>
             `;
+            //messages button
+            document.querySelector('#messages_button').addEventListener('click', ()=>{
+                fetch('/add_chat/'+data.username);
+            })
 
+            //follow button
             follow_button = document.querySelector('#follow_div')
             follow_button.addEventListener('click', ()=>{
                 if(logged){
@@ -197,7 +217,6 @@ function load_profile(who){
                 }else{
                     alert("é necessário o login!")
                 }
-                    
             })
         });
         

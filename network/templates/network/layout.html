@@ -30,7 +30,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" id="user-profile" data-username="{{ user.username }}"><strong><i class="bi bi-person-circle"></i> {{ user.username }}</strong></a>
+                            <a class="nav-link" id="user-profile" data-username="{{ user.username }}"><strong><i class="bi bi-person-circle"></i><span id="current_user_username">{{ user.username }}</span></strong></a>
                         </li>
                     {% endif %}
                         <li class="nav-item">
