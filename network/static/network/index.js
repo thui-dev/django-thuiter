@@ -71,19 +71,37 @@ function chats_view(){
     hide_all_but_this_view('chats_view');
     //history.pushState({section: ''}, '', 'chats');
 
+    document.querySelector('#chats').innerHTML=''
+
     //load chats
     fetch(`chats/${current_user_username}`)
     .then(response => response.json())
     .then(chats => {
         chats.forEach(chat => {
-            //todo
-        })
-    });
 
-    document.querySelector('#open_messages').addEventListener('click', (event)=>{
+        const chat_element = document.createElement('div')
+        chat_element.innerHTML = `
+        <div class="row" id="open_messages">
+            <div class="col-auto">
+                <img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:65px">
+            </div>
+            <div class="col-auto" style="padding:0px;">
+                <b style="font-size:160%">${chat.username}</b>
+                <div style="color:gray">ultima msg • há 11 min </div>
+            </div>
+        </div>
+        <hr>`;
+
+        chat_element.addEventListener('click', (event)=>{
             console.log(event.target);
             messages_view(event.target);
         })
+
+        document.querySelector('#chats').append(chat_element);
+        })
+    });
+
+    
     }
 
 function load_profile(who){

@@ -31,10 +31,13 @@ def change_pfp(request):
     return HttpResponseRedirect('/'+request.user.username)
 
 def user_chats(request, username):
-
-    data=[{
-
-    }]
+    users = User.objects.get(id=request.user.id).chat.all()
+    data=[]
+    for user in users:
+        data.append({
+            "username":user.username,
+            "user_pfp_url":user.pfp.url,
+        })
     return JsonResponse(data,status=201, safe=False)
 
 def api_profile_view(request, who):
@@ -153,6 +156,7 @@ def feed_view(request, view):
 
 def add_chat(request, username):
     User.objects.get(id=request.user.id).chat.add(User.objects.get(username=username))
+    User.objects.get(username=username).chat.add(User.objects.get(id=request.user.id))
     return HttpResponseRedirect(reverse('index'), status=201)
 
 def create(request):
