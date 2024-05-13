@@ -324,16 +324,16 @@ function post_obj(post){
         </div>
     </div>
     `;
+
     //post options view
     element.querySelector('#post_options').addEventListener('click', (e) => {
         e.stopPropagation()
-        console.log(post.id)
-
-        f = document.querySelector('#delete_post_button').addEventListener('click', ()=>{
+        //delete button
+        document.querySelector('#delete_post_button').addEventListener('click', ()=>{
             fetch(`/api/delete_post/${post.id}`)
-            .then(()=>{load_feed('all', 'feed')});
+            .then(()=>{load_feed('all', 'feed')});    
+            document.querySelector('#delete_post_button').outerHTML = document.querySelector('#delete_post_button').outerHTML;
         });
-
     })
     //specific post view on click
     element.addEventListener('click', (e) => {
