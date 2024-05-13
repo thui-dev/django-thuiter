@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse
+from django.db.models import Q
 
 from .models import *
 
@@ -20,6 +21,27 @@ def follow_view(request, user):
             User.objects.get(id=request.user.id).following.remove(User.objects.get(username=user))
 
         return HttpResponse(status=204)
+
+def messages_view(request, username):
+    data=[]
+
+    user_1 = User.objects.get(id=request.user.id)
+    user_2 = User.objects.get(username=username)
+
+    messages = Messages.objects.filter(Q(sender=user_1) | 
+                                       Q(sender=user_2) &
+                                       Q(receiver=user_1)|
+                                       Q(receiver=user_2)).order_by('-timestamp').all()
+
+    for message in messages:
+        data.append({
+            'sender': message.sender.username,
+            'receiver':message.receiver.username,
+            'timestamp':message.timestamp,
+            'content':message.content,
+        })
+
+    return JsonResponse(data, status=200, safe=False)
 
 def change_pfp(request):
     if not request.FILES.get('pfp_img_file'):

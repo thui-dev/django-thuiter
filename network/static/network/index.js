@@ -72,7 +72,12 @@ function messages_view(chat){
     document.querySelector('#message_header_pfp').innerHTML=`<img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">`;
     document.querySelector('#message_header_username').innerHTML=chat.username;
 
-    
+    fetch(`messages/${chat.username}`)
+    .then(response => response.json())
+    .then(chats => {
+        chats.forEach(chat => {})
+    });
+
 }
 
 function chats_view(){

@@ -16,6 +16,7 @@ urlpatterns = [
     path(r'^/create', views.create, name="create"),
     path('add_chat/<str:username>', views.add_chat, name="add_chat"),
     path('chats/', views.user_chats, name="user_chats"),
+    path('messages/<str:username>', views.messages_view, name="messages_view"),
     path("feed/<str:view>", views.feed_view, name="feed_view"),
     path("follow/<str:user>", views.follow_view, name="follow_view"),
     path(r'^/change_pfp', views.change_pfp, name="change_pfp"),
