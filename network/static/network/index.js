@@ -75,8 +75,15 @@ function messages_view(chat){
     //send message
     document.querySelector('#new_message_submit').addEventListener('click', ()=>{
         message_content = document.querySelector('#new_message_content').value;
-        console.log(message_content);
-        message_content = document.querySelector('#new_message_content').value = '';
+        fetch(`/api/new_message/`, {
+            method: 'POST',
+            headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
+            body: JSON.stringify({
+                receiver:chat.username,
+                content:message_content,
+            })
+        });
+        document.querySelector('#new_message_content').value = '';
     });
 
     //get messages

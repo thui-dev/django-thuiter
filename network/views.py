@@ -22,13 +22,25 @@ def follow_view(request, user):
 
         return HttpResponse(status=204)
 
+def new_message(request):
+    data = json.loads(request.body)
+    print(request.body)
+
+    new_message = Message(
+        sender=User.objects.get(id=request.user.id),
+        receiver=User.objects.get(username=data['receiver']),
+        content=data['content'],
+    )
+    new_message.save()
+    return HttpResponse(status=204)
+
 def messages_view(request, username):
     data=[]
 
     user_1 = User.objects.get(id=request.user.id)
     user_2 = User.objects.get(username=username)
 
-    messages = Messages.objects.filter(Q(sender=user_1) | 
+    messages = Message.objects.filter(Q(sender=user_1) | 
                                        Q(sender=user_2) &
                                        Q(receiver=user_1)|
                                        Q(receiver=user_2)).order_by('timestamp').all()

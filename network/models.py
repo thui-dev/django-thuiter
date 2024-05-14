@@ -7,7 +7,7 @@ class User(AbstractUser):
     pfp = models.ImageField(upload_to="pfps", default='pfps/Default_pfp.jpg')
     chat = models.ManyToManyField("User", blank=True, related_name="chats")
 
-class Messages(models.Model):
+class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="senders")
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="receivers")
     content = models.CharField(max_length=256)
