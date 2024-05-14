@@ -56,10 +56,8 @@ def messages_view(request, username):
     user_1 = User.objects.get(id=request.user.id)
     user_2 = User.objects.get(username=username)
 
-    messages = Message.objects.filter(Q(sender=user_1) | 
-                                       Q(sender=user_2) &
-                                       Q(receiver=user_1)|
-                                       Q(receiver=user_2)).order_by('timestamp').all()
+    messages = Message.objects.filter(Q(sender=user_1, receiver=user_2) | 
+                                      Q(sender=user_2, receiver=user_1)).order_by('timestamp').all()
 
     for message in messages:
         data.append({
