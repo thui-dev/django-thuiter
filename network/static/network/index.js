@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logged = false;
     }
 
-    //current_user_username = document.querySelector('#current_user_username').innerHTML;
+    current_user_username = document.querySelector('#current_user_username').innerHTML;
 
     //feed view navbar(all/following)
     document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
@@ -74,9 +74,35 @@ function messages_view(chat){
 
     fetch(`messages/${chat.username}`)
     .then(response => response.json())
-    .then(chats => {
-        chats.forEach(chat => {
+    .then(messages => {
+        messages.forEach(message => {
+            const message_element = document.createElement('div');
             
+            if(current_user_username == message.sender){
+                message_element.innerHTML = `
+                <div style="height:8px"></div>
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:10px">
+                            ${message.content}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }else{
+                message_element.innerHTML = `
+                <div style="height:8px"></div>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-inline-flex p-2" style="background-color:rgb(13, 93, 184); border-radius:10px">
+                            ${message.content}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+
+            document.querySelector('#messages_view_body').append(message_element);
         });
     });
 
