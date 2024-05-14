@@ -101,7 +101,6 @@ function messages_view(chat){
                 </div>
                 `;
             }
-
             document.querySelector('#messages_view_body').append(message_element);
         });
     });
@@ -252,6 +251,7 @@ function load_profile(who){
             //messages button
             document.querySelector('#messages_button').addEventListener('click', ()=>{
                 fetch('/add_chat/'+data.username);
+                chats_view();
             })
 
             //follow button
