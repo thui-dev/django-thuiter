@@ -98,6 +98,7 @@ function messages_view(chat){
         document.querySelector('#messages_view_body').append(message_element);
 
         document.querySelector('#new_message_content').value = '';
+        scrollTo(0, document.body.scrollHeight)
     });
 
     //get messages
@@ -131,6 +132,7 @@ function messages_view(chat){
                 `;
             }
             document.querySelector('#messages_view_body').append(message_element);
+            window.scrollTo({top:document.body.scrollHeight, behavior:'instant'});
         });
     });
 
@@ -160,13 +162,22 @@ function messages_view(chat){
                     </div>
                 </div>
                 `;
-                document.querySelector('#messages_view_body').append(message_element);
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight){
+                    document.querySelector('#messages_view_body').append(message_element);    
+                    will_scroll_to_keep_end();
+                }else{
+                    document.querySelector('#messages_view_body').append(message_element);
+                }
+                function will_scroll_to_keep_end(){
+                    scrollTo(0, document.body.scrollHeight)
+                }
+                
+                
             }
-        })
+        });
     },1000);
 
 }
-
 function chats_view(){
     hide_all_but_this_view('chats_view');
     //history.pushState({section: ''}, '', 'chats');

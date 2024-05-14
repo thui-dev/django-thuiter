@@ -74,7 +74,9 @@
                 <textarea autofocus class="form-control" placeholder="Leave a comment here" name="content" id="content" style="height: 100px"></textarea>
                 <label for="content">escreva o que está pensando</label>
             </div>
-            
+            <label for="pfp_img_file" class="form-control">
+                <i class="bi bi-image"></i>&nbsp;Adicionar Imagem
+            </label>
             <input type="file" id="image" name="arquivo">
 
             <div style="display:flex; justify-content:right; margin:0px 20px;">
@@ -119,11 +121,11 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h3>Trocar Foto de Perfil:</h3>
+                    <label for="pfp_img_file" class="form-control">
+                        <i class="bi bi-image"></i>&nbsp;Trocar Foto de Perfil
+                    </label>
                     <input type="file" id="pfp_img_file" name="pfp_img_file">
-                    <!--<hr>
-                    <h3>Nome de usuário:</h3>
-                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"> -->
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
