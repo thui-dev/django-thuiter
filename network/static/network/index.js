@@ -485,6 +485,7 @@ function post_obj(post){
         <div>${post.content}</div>
         
         <div style="display:flex; justify-content:right">
+            <div>${moment(post.timestamp).fromNow()}</div>
             <div style="padding:5px;"><i class="bi bi-chat"></i>&#8287;&#8287;${post.comments_count}</div>
             <div id="like" style="padding:5px;"></div>
         </div>

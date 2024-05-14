@@ -36,4 +36,5 @@ class Post(models.Model):
             "user":self.user.username,
             "liked":"false",
             "yours":"false",
+            "timestamp":self.timestamp,
         }
