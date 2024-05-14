@@ -83,6 +83,20 @@ function messages_view(chat){
                 content:message_content,
             })
         });
+
+        const message_element = document.createElement('div');
+        message_element.innerHTML = `
+        <div style="height:8px"></div>
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <div class="d-inline-flex p-2 text-break" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
+                    ${message_content}
+                </div>
+            </div>
+        </div>
+        `;
+        document.querySelector('#messages_view_body').append(message_element);
+
         document.querySelector('#new_message_content').value = '';
     });
 
@@ -98,7 +112,7 @@ function messages_view(chat){
                 <div style="height:8px"></div>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <div class="d-inline-flex p-2" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
+                        <div class="d-inline-flex p-2 text-break" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
                             ${message.content}
                         </div>
                     </div>
@@ -109,7 +123,7 @@ function messages_view(chat){
                 <div style="height:8px"></div>
                 <div class="row">
                     <div class="col">
-                        <div class="d-inline-flex p-2" style="background-color:rgba(0, 132, 255, 0.527); border-radius:10px">
+                        <div class="d-inline-flex p-2 text-break" style="background-color:rgba(0, 132, 255, 0.527); border-radius:10px">
                             ${message.content}
                         </div>
                     </div>
@@ -119,6 +133,10 @@ function messages_view(chat){
             document.querySelector('#messages_view_body').append(message_element);
         });
     });
+
+    setInterval(()=>{
+        
+    },5000)
 
 }
 
