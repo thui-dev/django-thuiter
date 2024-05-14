@@ -72,6 +72,10 @@ function messages_view(chat){
     document.querySelector('#message_header_pfp').innerHTML=`<img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">`;
     document.querySelector('#message_header_username').innerHTML=chat.username;
 
+
+
+
+    //get messages
     fetch(`messages/${chat.username}`)
     .then(response => response.json())
     .then(messages => {
@@ -83,7 +87,7 @@ function messages_view(chat){
                 <div style="height:8px"></div>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <div class="d-inline-flex p-2" style="background-color:rgb(89, 89, 89); border-radius:10px">
+                        <div class="d-inline-flex p-2" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
                             ${message.content}
                         </div>
                     </div>
@@ -94,7 +98,7 @@ function messages_view(chat){
                 <div style="height:8px"></div>
                 <div class="row">
                     <div class="col">
-                        <div class="d-inline-flex p-2" style="background-color:rgb(13, 93, 184); border-radius:10px">
+                        <div class="d-inline-flex p-2" style="background-color:rgba(0, 132, 255, 0.527); border-radius:10px">
                             ${message.content}
                         </div>
                     </div>
