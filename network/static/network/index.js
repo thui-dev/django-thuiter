@@ -72,8 +72,12 @@ function messages_view(chat){
     document.querySelector('#message_header_pfp').innerHTML=`<img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">`;
     document.querySelector('#message_header_username').innerHTML=chat.username;
 
-
-
+    //send message
+    document.querySelector('#new_message_submit').addEventListener('click', ()=>{
+        message_content = document.querySelector('#new_message_content').value;
+        console.log(message_content);
+        message_content = document.querySelector('#new_message_content').value = '';
+    });
 
     //get messages
     fetch(`messages/${chat.username}`)
