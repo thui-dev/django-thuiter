@@ -22,6 +22,7 @@ urlpatterns = [
     path(r'^/change_pfp', views.change_pfp, name="change_pfp"),
 
     path('api/new_message/', views.new_message, name="new_message"),
+    path('api/temp_last_message/<str:username>', views.temp_last_message, name="temp_last_message"),
     path("api/delete_post/<int:id>", views.api_delete_post, name="api_delete_post"),
     path("api/post/<int:id>", views.api_post, name="api_post_view"),
     path("api/profile/<str:who>", views.api_profile_view, name="api_profile_view"),

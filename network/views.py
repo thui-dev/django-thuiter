@@ -34,6 +34,22 @@ def new_message(request):
     new_message.save()
     return HttpResponse(status=204)
 
+def temp_last_message(request, username):
+
+    current_user = User.objects.get(id=request.user.id)
+    sender = User.objects.get(username=username)
+
+    last_message = Message.objects.filter(Q(sender=sender) & 
+                                             Q(receiver=current_user)).order_by('-timestamp').first()
+
+    data = {
+        'msg_id':last_message.id,
+        'content':last_message.content,
+        'timestamp':last_message.timestamp,
+    }
+
+    return JsonResponse(data,safe=False, status=201)
+
 def messages_view(request, username):
     data=[]
 

@@ -72,7 +72,7 @@ function messages_view(chat){
     document.querySelector('#message_header_pfp').innerHTML=`<img src="${chat.user_pfp_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">`;
     document.querySelector('#message_header_username').innerHTML=chat.username;
 
-    //send message
+    //send message, and appear on screen client side
     document.querySelector('#new_message_submit').addEventListener('click', ()=>{
         message_content = document.querySelector('#new_message_content').value;
         fetch(`/api/new_message/`, {
@@ -134,9 +134,34 @@ function messages_view(chat){
         });
     });
 
-    setInterval(()=>{
-        
-    },5000)
+    let last_msg_id = 0;
+
+    fetch(`api/temp_last_message/${chat.username}`)
+        .then(response => response.json())
+        .then(message => {console.log(message.msg_id); last_msg_id=message.msg_id})
+
+    tmp_msg_interval = setInterval(()=>{
+        fetch(`api/temp_last_message/${chat.username}`)
+        .then(response => response.json())
+        .then(message => {
+            if(message.msg_id == last_msg_id+1){
+                last_msg_id++;
+
+                const message_element = document.createElement('div');
+                message_element.innerHTML = `
+                <div style="height:8px"></div>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-inline-flex p-2 text-break" style="background-color:rgba(0, 132, 255, 0.527); border-radius:10px">
+                            ${message.content}
+                        </div>
+                    </div>
+                </div>
+                `;
+                document.querySelector('#messages_view_body').append(message_element);
+            }
+        })
+    },1000);
 
 }
 
@@ -496,6 +521,9 @@ function hide_all_but_this_view(view){
     document.querySelector('#chats_view').style.display="none";
 
     document.querySelector(`#${view}`).style.display="block";
+    try{
+        clearInterval(tmp_msg_interval)
+    }catch{}
 }
 
 function load_feed(type, where){
