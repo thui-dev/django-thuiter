@@ -144,8 +144,10 @@ function messages_view(chat){
         fetch(`api/temp_last_message/${chat.username}`)
         .then(response => response.json())
         .then(message => {
-            if(message.msg_id == last_msg_id+1){
-                last_msg_id++;
+            if(message.msg_id > last_msg_id){
+
+                console.log(message.msg_id);
+                last_msg_id = message.msg_id;
 
                 const message_element = document.createElement('div');
                 message_element.innerHTML = `
