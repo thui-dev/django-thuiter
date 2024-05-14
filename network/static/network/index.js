@@ -493,7 +493,7 @@ function post_obj(post){
 
     //post options view
     if (post.yours == 'true'){
-        element.querySelector('#post_options').addEventListener('click', () => {
+        element.querySelector('#post_options').addEventListener('click', (e) => {
             e.stopPropagation()
             //delete button
             document.querySelector('#delete_post_button').addEventListener('click', ()=>{
