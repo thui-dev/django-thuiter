@@ -75,8 +75,11 @@
                 <label for="content">escreva o que está pensando</label>
             </div>
             
-            <input type="file" id="image" name="arquivo">
-
+            <div class="input-group mb-3">
+                <label class="form-control" for="image" class="form-label">Adicionar Imagem:</label>
+                <input class="form-control" type="file" id="image" name="arquivo">
+            </div>
+            
             <div style="display:flex; justify-content:right; margin:0px 20px;">
                 <button type="submit" class="btn btn-primary mb-3">thuitar</button>
             </div>
@@ -120,7 +123,12 @@
                 </div>
                 <div class="modal-body">
                     
-                    <input type="file" id="pfp_img_file" name="pfp_img_file">
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <label class="form-control" for="pfp_img_file" class="form-label">Imagem de Perfil:</label>
+                            <input class="form-control" type="file" id="pfp_img_file" name="pfp_img_file" >
+                        </div>
+                    </div>
 
                 </div>
                 <div class="modal-footer">
