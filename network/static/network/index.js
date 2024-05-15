@@ -486,10 +486,10 @@ function post_obj(post){
 
         <div class="row align-items-center">
 
-            <div class="col-5">
+            <div class="col-7">
                 <div style="padding:5px; color:gray">${moment(post.timestamp).locale('pt-BR').fromNow()}</div>
             </div>
-            <div class="col-7 d-flex flex-row-reverse">
+            <div class="col-5 d-flex flex-row-reverse">
                 <div style="padding:5px;"><i class="bi bi-chat"></i>&#8287;&#8287;${post.comments_count}</div>
                 <div id="like" style="padding:5px;"></div>
             </div>
