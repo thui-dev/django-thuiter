@@ -13,9 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
         load_feed('all', 'feed');
-    }/*else if(pathname[1] == 'chats'){
-        chats_view();
-    }*/else{ck', () => {
+    }else{
+        load_profile(pathname[1]);
+    }
+    //messages_view();
+    //load_feed('all', 'feed');
+
+    //theme toggle button
+    let mode_toggle = document.querySelector('#mode-toggle');
+    if (localStorage.getItem('theme') == 'light'){
+        mode_toggle.innerHTML = '<i class="bi bi-moon"></i>';
+    }else{
+        mode_toggle.innerHTML = '<i class="bi bi-sun"></i>';
+    }
+    mode_toggle.addEventListener('click', () => {
         if (localStorage.getItem('theme') == "light"){
             mode_toggle.innerHTML = '<i class="bi bi-sun"></i>';
             document.querySelector('html').setAttribute('data-bs-theme','dark');
