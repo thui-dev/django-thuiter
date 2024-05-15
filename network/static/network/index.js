@@ -483,12 +483,18 @@ function post_obj(post){
         ${image_if_any()}
         <div style="height:5px"></div>
         <div>${post.content}</div>
-        
-        <div style="display:flex; justify-content:right">
-            <div>${moment(post.timestamp).fromNow()}</div>
-            <div style="padding:5px;"><i class="bi bi-chat"></i>&#8287;&#8287;${post.comments_count}</div>
-            <div id="like" style="padding:5px;"></div>
+
+        <div class="row align-items-center">
+
+            <div class="col-5">
+                <div style="padding:5px; color:gray">${moment(post.timestamp).locale('pt-BR').fromNow()}</div>
+            </div>
+            <div class="col-7 d-flex flex-row-reverse">
+                <div style="padding:5px;"><i class="bi bi-chat"></i>&#8287;&#8287;${post.comments_count}</div>
+                <div id="like" style="padding:5px;"></div>
+            </div>
         </div>
+
     </div>
     `;
 
