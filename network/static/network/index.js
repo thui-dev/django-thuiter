@@ -99,6 +99,7 @@ function search(){
 }
 
 function users_view(data, type){
+    document.querySelector('#users_list').innerHTML ='';
     hide_all_but_this_view('users_view')
     if (type == 'followers' || type=='following'){
         
@@ -315,151 +316,147 @@ function chats_view(){
 }
 
 function load_profile(who){
-    hide_all_but_this_view('profile_view');
 
     history.pushState({section: who}, '', `/${who}`)
 
+    document.querySelector('#profile_header').innerHTML = ''
+
     const profile_header = document.querySelector('#profile_header');
-    function header(){
+    fetch(`/api/profile/${who}`)
+    .then(response => response.json())
+    .then(data => {
 
-        fetch(`/api/profile/${who}`)
-        .then(response => response.json())
-        .then(data => {
-
-            function buttons(){{
-                if (data.following_button == 'self'){
-                    return `
-                    <div class="col-auto" style="padding:0px">
-                        <a type="button" href="/logout" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile">Editar</a>
+        function buttons(){{
+            if (data.following_button == 'self'){
+                return `
+                <div class="col-auto" style="padding:0px">
+                    <a type="button" href="/logout" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile">Editar</a>
+                </div>
+                <div class="col-auto">
+                    <a type="button" href="/logout" class="btn btn-secondary">Sair</a>
+                </div>
+                `
+            }else{
+                let element = '';
+                if (data.following_button == 'true'){
+                    element = `
+                    <div id="follow_div" class="col-auto"  style="padding:0px">
+                        <button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>
                     </div>
-                    <div class="col-auto">
-                        <a type="button" href="/logout" class="btn btn-secondary">Sair</a>
+                    `}
+                else{
+                    element = `
+                    <div id="follow_div" class="col-auto"  style="padding:0px">
+                        <button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>
                     </div>
-                    `
-                }else{
-                    let element = '';
-                    if (data.following_button == 'true'){
-                        element = `
-                        <div id="follow_div" class="col-auto"  style="padding:0px">
-                            <button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>
-                        </div>
-                        `}
-                    else{
-                        element = `
-                        <div id="follow_div" class="col-auto"  style="padding:0px">
-                            <button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>
-                        </div>
-                        `}
-                    
-                    return`${element}
-                    <div id="follow_div" class="col-auto">
-                        <button id="messages_button" type="button" class="btn btn-primary">mensagens</button>
-                    </div>`;
-                    }
+                    `}
+                
+                return`${element}
+                <div id="follow_div" class="col-auto">
+                    <button id="messages_button" type="button" class="btn btn-primary">mensagens</button>
+                </div>`;
                 }
             }
+        }
 
-            profile_header.innerHTML = `
-            <div class="container text-left">
-            <div class="row">
+        profile_header.innerHTML = `
+        <div class="container text-left">
+        <div class="row">
 
-                <div class="col-5" style="padding:20px 0px 0px 0px">
-                    <div class="container">
-                        <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover;">
-                    </div>
-                </div>
-                
-
-                <div class="col-7" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
-                    <div class="container">
-                        <div class="row">
-                            <h1>${data.username}</h1>
-                        </div>  
-
-                        <div class="row" style="text-align:center">
-                            <div class="col-6" id="following_div">
-
-                                <div class="row justify-content-center">
-                                    <div class="col-12">
-                                        ${data.following_count}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-12">
-                                       seguindo
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-6" id="followers_div">
-
-                                <div class="row justify-content-center">
-                                    <div class="col-12" id="followers_count">
-                                        ${data.followers_count}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-12">
-                                       seguidores
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row" style="height:10px"></div>
-                        
-                        <div class="row">
-                            ${buttons()}
-                        </div>
-                        
-                    </div>
+            <div class="col-5" style="padding:20px 0px 0px 0px">
+                <div class="container">
+                    <img src="${data.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover;">
                 </div>
             </div>
-            </div>
-            `;
-            //users view
-            document.querySelector('#following_div').addEventListener('click', ()=>{
-                users_view(who, 'following');
-            });
-            document.querySelector('#followers_div').addEventListener('click', ()=>{
-                users_view(who, 'followers');
-            });
             
-            //messages button
-            document.querySelector('#messages_button').addEventListener('click', ()=>{
-                fetch('/add_chat/'+data.username);
-                chats_view();
-            })
 
-            //follow button
-            follow_button = document.querySelector('#follow_div')
-            follow_button.addEventListener('click', ()=>{
-                if(logged){
-                let followers_count_element = document.querySelector("#followers_count");
-                let followers = parseInt(followers_count_element.innerHTML);
-                fetch(`/follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
-                
-                    if (data.following_button == 'false'){
-                        data.following_button = 'true';
-                        follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>`;
-                        followers_count_element.innerHTML = followers+1;
-                    }
-                    else{
-                        data.following_button = 'false';
-                        follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`;
-                        followers_count_element.innerHTML = followers-1;
-                    }
-                }else{
-                    alert("é necessário o login!")
-                }
-            })
+            <div class="col-7" style="display:flex; align-items: center; padding:15px 0px 0px 0px;">
+                <div class="container">
+                    <div class="row">
+                        <h1>${data.username}</h1>
+                    </div>  
+
+                    <div class="row" style="text-align:center">
+                        <div class="col-6" id="following_div">
+
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    ${data.following_count}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    seguindo
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6" id="followers_div">
+
+                            <div class="row justify-content-center">
+                                <div class="col-12" id="followers_count">
+                                    ${data.followers_count}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    seguidores
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="height:10px"></div>
+                    
+                    <div class="row">
+                        ${buttons()}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        </div>
+        `;
+        //users view
+        document.querySelector('#following_div').addEventListener('click', ()=>{
+            users_view(who, 'following');
+        });
+        document.querySelector('#followers_div').addEventListener('click', ()=>{
+            users_view(who, 'followers');
         });
         
-    };
+        //messages button
+        document.querySelector('#messages_button').addEventListener('click', ()=>{
+            fetch('/add_chat/'+data.username);
+            chats_view();
+        })
 
-    header();
+        //follow button
+        follow_button = document.querySelector('#follow_div')
+        follow_button.addEventListener('click', ()=>{
+            if(logged){
+            let followers_count_element = document.querySelector("#followers_count");
+            let followers = parseInt(followers_count_element.innerHTML);
+            fetch(`/follow/${data.username}?action=${document.querySelector('#follow_button').dataset.action}`);
+            
+                if (data.following_button == 'false'){
+                    data.following_button = 'true';
+                    follow_button.innerHTML = `<button id="follow_button" data-action="unfollow" type="button" class="btn btn-secondary">- Seguindo</button>`;
+                    followers_count_element.innerHTML = followers+1;
+                }
+                else{
+                    data.following_button = 'false';
+                    follow_button.innerHTML = `<button id="follow_button" data-action="follow" type="button" class="btn btn-primary">+ Seguir</button>`;
+                    followers_count_element.innerHTML = followers-1;
+                }
+            }else{
+                alert("é necessário o login!")
+            }
+        })
+    });
+    hide_all_but_this_view('profile_view');
     load_feed(who, 'profile_feed');
 }
 
