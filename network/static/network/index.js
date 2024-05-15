@@ -75,30 +75,31 @@ function messages_view(chat){
     //send message, and appear on screen client side
     document.querySelector('#new_message_submit').addEventListener('click', ()=>{
         message_content = document.querySelector('#new_message_content').value;
-        fetch(`/api/new_message/`, {
-            method: 'POST',
-            headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
-            body: JSON.stringify({
-                receiver:chat.username,
-                content:message_content,
-            })
-        });
-
-        const message_element = document.createElement('div');
-        message_element.innerHTML = `
-        <div style="height:8px"></div>
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <div class="d-inline-flex p-2 text-break" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
-                    ${message_content}
+        if(message_content != ''){
+            fetch(`/api/new_message/`, {
+                method: 'POST',
+                headers: {'X-CSRFToken':document.querySelector('[name=csrfmiddlewaretoken]').value},
+                body: JSON.stringify({
+                    receiver:chat.username,
+                    content:message_content,
+                })
+            });
+            const message_element = document.createElement('div');
+            message_element.innerHTML = `
+            <div style="height:8px"></div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <div class="d-inline-flex p-2 text-break" style="background-color:rgba(89, 89, 89, 0.3); border-radius:10px">
+                        ${message_content}
+                    </div>
                 </div>
             </div>
-        </div>
-        `;
-        document.querySelector('#messages_view_body').append(message_element);
-
-        document.querySelector('#new_message_content').value = '';
-        scrollTo(0, document.body.scrollHeight)
+            `;
+            document.querySelector('#messages_view_body').append(message_element);
+    
+            document.querySelector('#new_message_content').value = '';
+            scrollTo(0, document.body.scrollHeight)
+        }
     });
 
     //get messages
