@@ -26,4 +26,5 @@ urlpatterns = [
     path("api/delete_post/<int:id>", views.api_delete_post, name="api_delete_post"),
     path("api/post/<int:id>", views.api_post, name="api_post_view"),
     path("api/profile/<str:who>", views.api_profile_view, name="api_profile_view"),
+    path("api/users_view/<str:username>", views.api_users_view, name="api_users_view"),
 ]

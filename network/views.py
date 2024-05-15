@@ -11,7 +11,6 @@ from .models import *
 def index(request, username="", post='', post_id=''):
     return render(request, "network/index.html")
 
-
 def follow_view(request, user):
     if request.method == "GET":
         action = request.GET.get("action")
@@ -108,6 +107,22 @@ def api_profile_view(request, who):
 
     return JsonResponse(data, safe=False)
 
+def api_users_view(request, username):
+    data = []
+
+    type = request.GET.get('type')
+    if type == 'followers':
+        users = User.objects.filter(following=User.objects.get(username=username)).all()
+    elif type == 'following':
+        users = User.objects.get(username=username).following.all()
+
+    for user in users:
+        data.append({
+            'username':user.username,
+            'pfp_img_url':user.pfp.url,
+        })
+
+    return JsonResponse(data, status=201, safe=False)
 
 def api_post(request, id):
     if request.method == 'PUT':

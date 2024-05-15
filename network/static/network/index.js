@@ -4,20 +4,54 @@ if (!localStorage.getItem('theme')){
 } 
 document.querySelector('html').setAttribute('data-bs-theme', localStorage.getItem('theme'));
 
+function users_view(data, type){
+    hide_all_but_this_view('users_view')
+    if (type == 'followers' || type=='following'){
+        
+        if (type == 'followers'){
+            document.querySelector('#users_view').innerHTML = `<h1>Seguidores</h1><hr>`
+        }else{
+            document.querySelector('#users_view').innerHTML = `<h1>Seguindo</h1><hr>`
+        }
+
+        fetch(`api/users_view/${data}?type=${type}`)
+        .then(response => response.json())
+        .then(users =>{
+                users.forEach( user =>{
+                const user_element = document.createElement('div');
+                user_element.innerHTML = `
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
+                    </div>
+                    <div class="col-auto" style="padding:0px;">
+                        <b style="font-size:140%">${user.username}</b>
+                    </div>
+                </div>
+                <div style="height:10px"></div>
+                `;
+                user_element.addEventListener('click', ()=>{
+                    load_profile(user.username);
+                });
+                document.querySelector('#users_view').append(user_element)
+            });
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     //ajeitando pathname to be passed in as variable
     let pathname = window.location.pathname.split('/')
 
-    //load user profile, post or feed_all
+    ///*load user profile, post or feed_all
     if (pathname[1] == 'post'){
         post_view(pathname[2]);
     }else if (pathname[1] == ''){
         load_feed('all', 'feed');
     }else{
         load_profile(pathname[1]);
-    }
-    //messages_view();
-    //load_feed('all', 'feed');
+    }//*/
+    //users_view('thui', 'followers');
 
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
@@ -275,7 +309,7 @@ function load_profile(who){
                         </div>  
 
                         <div class="row" style="text-align:center">
-                            <div class="col-6">
+                            <div class="col-6" id="following_div">
 
                                 <div class="row justify-content-center">
                                     <div class="col-12">
@@ -290,7 +324,7 @@ function load_profile(who){
                                 </div>
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-6" id="followers_div">
 
                                 <div class="row justify-content-center">
                                     <div class="col-12" id="followers_count">
@@ -317,6 +351,14 @@ function load_profile(who){
             </div>
             </div>
             `;
+            //users view
+            document.querySelector('#following_div').addEventListener('click', ()=>{
+                users_view(who, 'following');
+            });
+            document.querySelector('#followers_div').addEventListener('click', ()=>{
+                users_view(who, 'followers');
+            });
+            
             //messages button
             document.querySelector('#messages_button').addEventListener('click', ()=>{
                 fetch('/add_chat/'+data.username);
@@ -531,6 +573,7 @@ function post_obj(post){
 }
 
 function hide_all_but_this_view(view){
+    document.querySelector('#users_view').style.display='none';
     document.querySelector('#messages_view').style.display="none";
     document.querySelector('#create_form').style.display="none";
     document.querySelector('#profile_view').style.display="none";
