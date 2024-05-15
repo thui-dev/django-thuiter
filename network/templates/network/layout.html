@@ -43,17 +43,21 @@
         </nav>
 
         <nav class="navbar fixed-bottom navbar-expand bg-body-tertiary">
-            <div class="container-fluid" style="font-size:200%; padding: 0px 20px">
+            <div class="container-fluid" style="font-size:170%; padding: 0px 20px">
                 {% if user.is_authenticated %}
                 <div style="margin:auto" class="nav-item">
                     <a class="nav-link" id="following"><i class="bi bi-house-door"></i></a>
+                </div>
+                <div style="margin:auto" class="nav-item">
+                    <a class="nav-link" id="search_button"><i class="bi bi-search"></i></a>
                 </div>
                 <div style="margin:auto" class="nav-item">
                     <a id="create" class="nav-link" ><i class="bi bi-plus-square"></i></a>
                 </div>     
                 <div style="margin:auto" class="nav-item">
                     <a class="nav-link" id="chat_button"><i class="bi bi-chat-left-dots"></i></a>
-                </div>                
+                </div>   
+                              
                 {% endif %}
             </div>
         </nav>

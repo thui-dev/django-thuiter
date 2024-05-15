@@ -4,41 +4,6 @@ if (!localStorage.getItem('theme')){
 } 
 document.querySelector('html').setAttribute('data-bs-theme', localStorage.getItem('theme'));
 
-function users_view(data, type){
-    hide_all_but_this_view('users_view')
-    if (type == 'followers' || type=='following'){
-        
-        if (type == 'followers'){
-            document.querySelector('#users_view').innerHTML = `<h1>Seguidores</h1><hr>`
-        }else{
-            document.querySelector('#users_view').innerHTML = `<h1>Seguindo</h1><hr>`
-        }
-
-        fetch(`api/users_view/${data}?type=${type}`)
-        .then(response => response.json())
-        .then(users =>{
-                users.forEach( user =>{
-                const user_element = document.createElement('div');
-                user_element.innerHTML = `
-                <div class="row">
-                    <div class="col-auto">
-                        <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
-                    </div>
-                    <div class="col-auto" style="padding:0px;">
-                        <b style="font-size:140%">${user.username}</b>
-                    </div>
-                </div>
-                <div style="height:10px"></div>
-                `;
-                user_element.addEventListener('click', ()=>{
-                    load_profile(user.username);
-                });
-                document.querySelector('#users_view').append(user_element)
-            });
-        });
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     //ajeitando pathname to be passed in as variable
     let pathname = window.location.pathname.split('/')
@@ -51,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }else{
         load_profile(pathname[1]);
     }//*/
-    //users_view('thui', 'followers');
 
     //theme toggle button
     let mode_toggle = document.querySelector('#mode-toggle');
@@ -77,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try{
         //document.querySelector('#chat_view').addEventListener('click', () => chat_view());
         document.querySelector('#create').addEventListener('click', () => create());
+        document.querySelector('#search_button').addEventListener('click', () => search());
         document.querySelector('#following').addEventListener('click', () => load_feed('all', 'feed'));
         document.querySelector('#chat_button').addEventListener('click', ()=>chats_view())
         document.querySelector('#user-profile').addEventListener('click', () => {
@@ -93,6 +58,109 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#recentes_header").addEventListener('click', ()=>{load_feed('all', 'feed')});
     document.querySelector("#seguindo_header").addEventListener('click', ()=>{load_feed('following', 'feed')});
 });
+
+
+function search(){
+    
+    document.querySelector('#users_view_header').innerHTML = `
+    <h1>Pesquisar Usuários</h1><hr>
+    <div>
+        <textarea id="search_username" class="d-inline-flex p-2" style="background-color:rgba(89, 89, 89, 0.3); border-radius:500px; width:100%; height:45px"></textarea>
+    </div>
+    <div style="height:10px"></div>
+    `;
+    document.querySelector('#users_list').innerHTML ='';
+
+    fetch(`api/users_view/24thuvri0g2dfj?type=users_search`)
+    .then(response => response.json())
+    .then(users =>{
+            users.forEach( user =>{
+            const user_element = document.createElement('div');
+            user_element.innerHTML = `
+            <div class="row">
+                <div class="col-auto">
+                    <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
+                </div>
+                <div class="col-auto" style="padding:0px;">
+                    <b style="font-size:140%">${user.username}</b>
+                </div>
+            </div>
+            <div style="height:10px"></div>
+            `;
+            user_element.addEventListener('click', ()=>{
+                load_profile(user.username);
+            });
+            document.querySelector('#users_list').append(user_element)
+        });
+    });
+    
+    hide_all_but_this_view('search_view');
+    users_view('ui', 'users_search');
+}
+
+function users_view(data, type){
+    hide_all_but_this_view('users_view')
+    if (type == 'followers' || type=='following'){
+        
+        if (type == 'followers'){
+            document.querySelector('#users_view_header').innerHTML = `<h1>Seguidores</h1><hr>`
+        }else{
+            document.querySelector('#users_view_header').innerHTML = `<h1>Seguindo</h1><hr>`
+        }
+
+        fetch(`api/users_view/${data}?type=${type}`)
+        .then(response => response.json())
+        .then(users =>{
+                users.forEach( user =>{
+                const user_element = document.createElement('div');
+                user_element.innerHTML = `
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
+                    </div>
+                    <div class="col-auto" style="padding:0px;">
+                        <b style="font-size:140%">${user.username}</b>
+                    </div>
+                </div>
+                <div style="height:10px"></div>
+                `;
+                user_element.addEventListener('click', ()=>{
+                    load_profile(user.username);
+                });
+                document.querySelector('#users_list').append(user_element)
+            });
+        });
+    }
+    else if (type == 'users_search'){
+        document.querySelector('#search_username').addEventListener('keyup', ()=>{
+            
+            document.querySelector('#users_list').innerHTML ='';
+
+            fetch(`api/users_view/${document.querySelector('#search_username').value}?type=${type}`)
+            .then(response => response.json())
+            .then(users =>{
+                    users.forEach( user =>{
+                    const user_element = document.createElement('div');
+                    user_element.innerHTML = `
+                    <div class="row">
+                        <div class="col-auto">
+                            <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
+                        </div>
+                        <div class="col-auto" style="padding:0px;">
+                            <b style="font-size:140%">${user.username}</b>
+                        </div>
+                    </div>
+                    <div style="height:10px"></div>
+                    `;
+                    user_element.addEventListener('click', ()=>{
+                        load_profile(user.username);
+                    });
+                    document.querySelector('#users_list').append(user_element)
+                });
+            });
+        });
+    }
+}
 
 function messages_view(chat){
     hide_all_but_this_view('messages_view');
@@ -573,6 +641,7 @@ function post_obj(post){
 }
 
 function hide_all_but_this_view(view){
+    document.querySelector('#search_view').style.display='none';
     document.querySelector('#users_view').style.display='none';
     document.querySelector('#messages_view').style.display="none";
     document.querySelector('#create_form').style.display="none";

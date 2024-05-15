@@ -115,6 +115,11 @@ def api_users_view(request, username):
         users = User.objects.filter(following=User.objects.get(username=username)).all()
     elif type == 'following':
         users = User.objects.get(username=username).following.all()
+    elif type == 'users_search':
+        if username=='24thuvri0g2dfj':
+            users = User.objects.all()
+        else:
+            users = User.objects.filter(username__contains=username).all()
 
     for user in users:
         data.append({
