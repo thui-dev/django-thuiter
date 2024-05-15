@@ -65,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function messages_view(chat){
     hide_all_but_this_view('messages_view');
     
+    document.querySelector('#messages_back_to_chats').addEventListener('click', ()=>{
+        hide_all_but_this_view('chats_view');
+    })
     //history.pushState({section: ''}, '', 'messages');
     
     document.querySelector('#messages_view_body').innerHTML='';
@@ -183,7 +186,7 @@ function chats_view(){
     hide_all_but_this_view('chats_view');
     //history.pushState({section: ''}, '', 'chats');
 
-    document.querySelector('#chats').innerHTML=''
+    document.querySelector('#chats').innerHTML='';
 
     //load chats
     fetch(`chats/`)
@@ -203,17 +206,13 @@ function chats_view(){
             </div>
         </div>
         <hr>`;
-
-        chat_element.addEventListener('click', (event)=>{
+        chat_element.addEventListener('click', ()=>{
             messages_view(chat);
         })
-
         document.querySelector('#chats').append(chat_element);
         })
     });
-
-    
-    }
+}
 
 function load_profile(who){
     hide_all_but_this_view('profile_view');
