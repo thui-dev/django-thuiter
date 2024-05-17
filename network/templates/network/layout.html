@@ -16,8 +16,8 @@
         {% block script %}
         {% endblock %}
     </head>
-    <body >
-        <nav class="navbar sticky-top navbar-expand bg-body-tertiary">
+    <body>
+        <nav class="navbar sticky-top navbar-expand bg-body-tertiary mx-auto p-2" style="max-width: 700px;">
             <div class="container-fluid">
 
                 <a class="navbar-brand" id="logo">Thuitter</a> 
@@ -42,7 +42,7 @@
             </div>
         </nav>
 
-        <nav class="navbar fixed-bottom navbar-expand bg-body-tertiary">
+        <nav class="navbar fixed-bottom navbar-expand bg-body-tertiary mx-auto p-2" style="max-width: 700px;">
             <div class="container-fluid" style="font-size:170%; padding: 0px 20px">
                 {% if user.is_authenticated %}
                 <div style="margin:auto" class="nav-item">
@@ -62,7 +62,7 @@
             </div>
         </nav>
         
-        <div class="body">
+        <div class="body mx-auto p-2" style="max-width: 700px;">
             {% block body %}
             {% endblock %}
         </div>
