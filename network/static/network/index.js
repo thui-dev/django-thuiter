@@ -77,6 +77,7 @@ function search(){
             users.forEach( user =>{
             const user_element = document.createElement('div');
             user_element.innerHTML = `
+            <div style="height:10px"></div>
             <div class="row">
                 <div class="col-auto">
                     <img src="${user.pfp_img_url}" class="img-fluid" style="border-radius:100%; aspect-ratio: 1 / 1; object-fit: cover; max-height:35px">
@@ -85,7 +86,7 @@ function search(){
                     <b style="font-size:140%">${user.username}</b>
                 </div>
             </div>
-            <div style="height:10px"></div>
+            
             `;
             user_element.addEventListener('click', ()=>{
                 load_profile(user.username);
